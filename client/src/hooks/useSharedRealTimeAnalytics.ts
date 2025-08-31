@@ -66,7 +66,7 @@ class AnalyticsSocketManager {
   private connectionState = {
     isConnected: false,
     lastUpdate: null as Date | null,
-    analytics: null as AnalyticsData | null
+    analytics: null as AnalyticsData | null,
   }
   private reconnectAttempts = 0
   private maxReconnectAttempts = 5
@@ -110,9 +110,8 @@ class AnalyticsSocketManager {
     }
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined
-    const socketUrl = typeof apiBaseUrl === 'string'
-      ? apiBaseUrl.replace('/api/v1', '')
-      : 'http://localhost:3001'
+    const socketUrl =
+      typeof apiBaseUrl === 'string' ? apiBaseUrl.replace('/api/v1', '') : 'http://localhost:3001'
 
     this.socket = io(socketUrl, {
       auth: { token },
@@ -155,7 +154,7 @@ class AnalyticsSocketManager {
       this.connectionState.lastUpdate = new Date(event.timestamp)
 
       // Notify all subscribers with the new data
-      this.subscribers.forEach(callback => {
+      this.subscribers.forEach((callback) => {
         try {
           callback(event.analytics)
         } catch {
@@ -178,10 +177,10 @@ class AnalyticsSocketManager {
       'analytics:lease-assigned',
       'analytics:lease-terminated',
       'analytics:lease-added',
-      'analytics:lease-status-updated'
+      'analytics:lease-status-updated',
     ]
 
-    analyticsEvents.forEach(eventType => {
+    analyticsEvents.forEach((eventType) => {
       this.socket?.on(eventType, handleAnalyticsUpdate)
     })
 
@@ -191,7 +190,7 @@ class AnalyticsSocketManager {
   }
 
   private notifyErrorHandlers(error: unknown): void {
-    this.errorHandlers.forEach(handler => {
+    this.errorHandlers.forEach((handler) => {
       try {
         handler(error)
       } catch {
@@ -221,7 +220,9 @@ class AnalyticsSocketManager {
 }
 
 // Hook that uses the shared connection manager
-export const useSharedRealTimeAnalytics = (options: UseRealTimeAnalyticsOptions = {}): UseRealTimeAnalyticsReturn => {
+export const useSharedRealTimeAnalytics = (
+  options: UseRealTimeAnalyticsOptions = {}
+): UseRealTimeAnalyticsReturn => {
   const { autoConnect = true, onAnalyticsUpdate, onError } = options
   const { user, token } = useAuth()
 
@@ -325,6 +326,6 @@ export const useSharedRealTimeAnalytics = (options: UseRealTimeAnalyticsOptions 
     disconnect,
     refresh,
     subscribe,
-    unsubscribe
+    unsubscribe,
   }
 }

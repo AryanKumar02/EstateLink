@@ -425,11 +425,11 @@ const CreateTenant: React.FC = () => {
           immigrationStatus: tenantData.personalInfo?.immigrationStatus || 'british-citizen',
           rightToRent: {
             verified: tenantData.personalInfo?.rightToRent?.verified || false,
-            verificationDate: toDateOnly(tenantData.personalInfo?.rightToRent?.verificationDate) || '',
+            verificationDate:
+              toDateOnly(tenantData.personalInfo?.rightToRent?.verificationDate) || '',
             documentType: tenantData.personalInfo?.rightToRent?.documentType || '',
-            documentExpiryDate: toDateOnly(
-              tenantData.personalInfo?.rightToRent?.documentExpiryDate,
-            ) || '',
+            documentExpiryDate:
+              toDateOnly(tenantData.personalInfo?.rightToRent?.documentExpiryDate) || '',
             recheckRequired: tenantData.personalInfo?.rightToRent?.recheckRequired || false,
             recheckDate: toDateOnly(tenantData.personalInfo?.rightToRent?.recheckDate) || '',
             notes: tenantData.personalInfo?.rightToRent?.notes || '',
@@ -465,7 +465,7 @@ const CreateTenant: React.FC = () => {
             country: 'United Kingdom',
           },
           previous:
-            tenantData.addresses?.previous?.map(addr => ({
+            tenantData.addresses?.previous?.map((addr) => ({
               ...addr,
               startDate: toDateOnly(addr.startDate) || '',
               endDate: toDateOnly(addr.endDate) || '',
@@ -502,15 +502,15 @@ const CreateTenant: React.FC = () => {
                 income: tenantData.employment.current?.income
                   ? {
                       ...tenantData.employment.current.income,
-                      verificationDate: toDateOnly(
-                        tenantData.employment.current.income.verificationDate,
-                      ) || '',
+                      verificationDate:
+                        toDateOnly(tenantData.employment.current.income.verificationDate) || '',
                       probationPeriod: tenantData.employment.current.income.probationPeriod
                         ? {
                             ...tenantData.employment.current.income.probationPeriod,
-                            endDate: toDateOnly(
-                              tenantData.employment.current.income.probationPeriod.endDate,
-                            ) || '',
+                            endDate:
+                              toDateOnly(
+                                tenantData.employment.current.income.probationPeriod.endDate
+                              ) || '',
                           }
                         : { inProbation: false, endDate: '' },
                     }
@@ -527,76 +527,75 @@ const CreateTenant: React.FC = () => {
               },
             }
           : {
-          current: {
-            status: 'employed-full-time',
-            employer: {
-              name: '',
-              position: '',
-              contractType: 'permanent',
-              startDate: '',
-              address: {
-                addressLine1: '',
-                addressLine2: '',
-                city: '',
-                county: '',
-                postcode: '',
-                country: 'United Kingdom',
+              current: {
+                status: 'employed-full-time',
+                employer: {
+                  name: '',
+                  position: '',
+                  contractType: 'permanent',
+                  startDate: '',
+                  address: {
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    county: '',
+                    postcode: '',
+                    country: 'United Kingdom',
+                  },
+                  phone: '',
+                  hrContactName: '',
+                  hrContactPhone: '',
+                  hrContactEmail: '',
+                },
+                income: {
+                  gross: { monthly: 0, annual: 0 },
+                  net: { monthly: 0, annual: 0 },
+                  currency: 'GBP',
+                  payFrequency: 'monthly',
+                  verified: false,
+                  verificationDate: '',
+                  verificationMethod: '',
+                  probationPeriod: { inProbation: false, endDate: '' },
+                },
+                benefits: { receives: false, types: [], monthlyAmount: 0 },
               },
-              phone: '',
-              hrContactName: '',
-              hrContactPhone: '',
-              hrContactEmail: '',
+              previous: [],
             },
-            income: {
-              gross: { monthly: 0, annual: 0 },
-              net: { monthly: 0, annual: 0 },
-              currency: 'GBP',
-              payFrequency: 'monthly',
-              verified: false,
-              verificationDate: '',
-              verificationMethod: '',
-              probationPeriod: { inProbation: false, endDate: '' },
-            },
-            benefits: { receives: false, types: [], monthlyAmount: 0 },
-          },
-          previous: [],
-        },
         financialInfo: tenantData.financialInfo
           ? {
               ...tenantData.financialInfo,
               bankAccount: {
                 ...tenantData.financialInfo.bankAccount,
-                verificationDate: toDateOnly(
-                  tenantData.financialInfo.bankAccount?.verificationDate,
-                ) || '',
+                verificationDate:
+                  toDateOnly(tenantData.financialInfo.bankAccount?.verificationDate) || '',
               },
             }
           : {
-          bankAccount: {
-            bankName: '',
-            accountType: 'current',
-            sortCode: '',
-            verified: false,
-            verificationDate: '',
-          },
-          guarantor: {
-            required: false,
-            provided: false,
-            name: '',
-            relationship: 'parent',
-            phone: '',
-            email: '',
-            address: '',
-            incomeVerified: false,
-          },
-          affordabilityAssessment: {
-            monthlyIncome: 0,
-            monthlyExpenses: 0,
-            monthlyCommitments: 0,
-            disposableIncome: 0,
-            rentToIncomeRatio: 0,
-          },
-        },
+              bankAccount: {
+                bankName: '',
+                accountType: 'current',
+                sortCode: '',
+                verified: false,
+                verificationDate: '',
+              },
+              guarantor: {
+                required: false,
+                provided: false,
+                name: '',
+                relationship: 'parent',
+                phone: '',
+                email: '',
+                address: '',
+                incomeVerified: false,
+              },
+              affordabilityAssessment: {
+                monthlyIncome: 0,
+                monthlyExpenses: 0,
+                monthlyCommitments: 0,
+                disposableIncome: 0,
+                rentToIncomeRatio: 0,
+              },
+            },
         pets: tenantData.pets || [],
         vehicles: tenantData.vehicles || [],
         privacy: (tenantData.privacy && {
@@ -1249,8 +1248,10 @@ const CreateTenant: React.FC = () => {
       ...(normalizedFormData.addresses && { addresses: normalizedFormData.addresses }),
       ...(normalizedFormData.employment && { employment: employmentPayload }),
       ...(normalizedFormData.financialInfo && { financialInfo: financialInfoPayload }),
-      ...(normalizedFormData.pets && normalizedFormData.pets.length > 0 && { pets: normalizedFormData.pets }),
-      ...(normalizedFormData.vehicles && normalizedFormData.vehicles.length > 0 && { vehicles: normalizedFormData.vehicles }),
+      ...(normalizedFormData.pets &&
+        normalizedFormData.pets.length > 0 && { pets: normalizedFormData.pets }),
+      ...(normalizedFormData.vehicles &&
+        normalizedFormData.vehicles.length > 0 && { vehicles: normalizedFormData.vehicles }),
       ...(normalizedFormData.references &&
         normalizedFormData.references.length > 0 && { references: normalizedFormData.references }),
       ...(normalizedFormData.privacy && { privacy: normalizedFormData.privacy }),

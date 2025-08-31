@@ -41,4 +41,3 @@ export function prefetchByPath(path: string): void {
     // ignore prefetch errors
   })
 }
-

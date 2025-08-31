@@ -49,33 +49,101 @@ const Analytics: React.FC = () => {
                 mb: 2,
               }}
             >
-              <Box sx={{ flex: { xs: '1 1 calc(50% - 4px)', sm: '1 1 calc(50% - 8px)', md: '1 1 calc(25% - 8px)' }, minWidth: { xs: 150, sm: 180, md: 200 } }}>
+              <Box
+                sx={{
+                  flex: {
+                    xs: '1 1 calc(50% - 4px)',
+                    sm: '1 1 calc(50% - 8px)',
+                    md: '1 1 calc(25% - 8px)',
+                  },
+                  minWidth: { xs: 150, sm: 180, md: 200 },
+                }}
+              >
                 <TotalPropertiesMetricCard />
               </Box>
-              <Box sx={{ flex: { xs: '1 1 calc(50% - 4px)', sm: '1 1 calc(50% - 8px)', md: '1 1 calc(25% - 8px)' }, minWidth: { xs: 150, sm: 180, md: 200 } }}>
+              <Box
+                sx={{
+                  flex: {
+                    xs: '1 1 calc(50% - 4px)',
+                    sm: '1 1 calc(50% - 8px)',
+                    md: '1 1 calc(25% - 8px)',
+                  },
+                  minWidth: { xs: 150, sm: 180, md: 200 },
+                }}
+              >
                 <ActiveTenantsMetricCard />
               </Box>
-              <Box sx={{ flex: { xs: '1 1 calc(50% - 4px)', sm: '1 1 calc(50% - 8px)', md: '1 1 calc(25% - 8px)' }, minWidth: { xs: 150, sm: 180, md: 200 } }}>
+              <Box
+                sx={{
+                  flex: {
+                    xs: '1 1 calc(50% - 4px)',
+                    sm: '1 1 calc(50% - 8px)',
+                    md: '1 1 calc(25% - 8px)',
+                  },
+                  minWidth: { xs: 150, sm: 180, md: 200 },
+                }}
+              >
                 <OccupancyRateMetricCard />
               </Box>
-              <Box sx={{ flex: { xs: '1 1 calc(50% - 4px)', sm: '1 1 calc(50% - 8px)', md: '1 1 calc(25% - 8px)' }, minWidth: { xs: 150, sm: 180, md: 200 } }}>
+              <Box
+                sx={{
+                  flex: {
+                    xs: '1 1 calc(50% - 4px)',
+                    sm: '1 1 calc(50% - 8px)',
+                    md: '1 1 calc(25% - 8px)',
+                  },
+                  minWidth: { xs: 150, sm: 180, md: 200 },
+                }}
+              >
                 <PortfolioValueMetricCard />
               </Box>
             </Box>
 
             {/* Second Row - Revenue & Cash Flow */}
-            <Box sx={{ display: 'flex', gap: { xs: 2, sm: 1 }, mb: 2, flexDirection: { xs: 'column', md: 'row' } }}>
-              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' }, minWidth: { xs: 300, md: 400 } }}>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: { xs: 2, sm: 1 },
+                mb: 2,
+                flexDirection: { xs: 'column', md: 'row' },
+              }}
+            >
+              <Box
+                sx={{
+                  flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' },
+                  minWidth: { xs: 300, md: 400 },
+                }}
+              >
                 <RevenueBreakdownCard />
               </Box>
-              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' }, minWidth: { xs: 300, md: 400 } }}>
+              <Box
+                sx={{
+                  flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' },
+                  minWidth: { xs: 300, md: 400 },
+                }}
+              >
                 <CashFlowTrendsCard />
               </Box>
             </Box>
 
             {/* Third Row - Top Properties and Lease Expirations side by side */}
-            <Box sx={{ display: 'flex', gap: { xs: 2, sm: 1 }, mb: 2, flexDirection: { xs: 'column', md: 'row' } }}>
-              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' }, minWidth: { xs: 300, md: 400 }, display: 'flex', gap: 1, alignItems: 'flex-start' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: { xs: 2, sm: 1 },
+                mb: 2,
+                flexDirection: { xs: 'column', md: 'row' },
+              }}
+            >
+              <Box
+                sx={{
+                  flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' },
+                  minWidth: { xs: 300, md: 400 },
+                  display: 'flex',
+                  gap: 1,
+                  alignItems: 'flex-start',
+                }}
+              >
                 <Box sx={{ flex: 1, width: '100%' }}>
                   <TopPropertiesCard />
                 </Box>
@@ -83,7 +151,12 @@ const Analytics: React.FC = () => {
                   <LeaseExpirationsCard />
                 </Box>
               </Box>
-              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' }, minWidth: { xs: 300, md: 400 } }}>
+              <Box
+                sx={{
+                  flex: { xs: '1 1 100%', md: '1 1 calc(50% - 4px)' },
+                  minWidth: { xs: 300, md: 400 },
+                }}
+              >
                 <TenantDemographicsCard />
               </Box>
             </Box>

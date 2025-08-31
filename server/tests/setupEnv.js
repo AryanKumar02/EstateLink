@@ -8,4 +8,3 @@ const uniqueMongoDownloadDir = join(
 );
 
 process.env.MONGOMS_DOWNLOAD_DIR = uniqueMongoDownloadDir;
-

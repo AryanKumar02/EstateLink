@@ -1,7 +1,12 @@
 import React, { useMemo } from 'react'
 import { Box, Typography, Card, CardContent, Chip, LinearProgress } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { PeopleOutlined, WorkOutlined, AccessTimeOutlined, TrendingUpOutlined } from '@mui/icons-material'
+import {
+  PeopleOutlined,
+  WorkOutlined,
+  AccessTimeOutlined,
+  TrendingUpOutlined,
+} from '@mui/icons-material'
 import { useQuery } from '@tanstack/react-query'
 import useRealTimeAnalytics from '../../hooks/useRealTimeAnalytics'
 import { useCurrency } from '../../hooks/useCurrency'
@@ -87,7 +92,7 @@ const TenantDemographicsCard: React.FC = () => {
     }
 
     const activeTenants = tenants.filter((tenant: Tenant) =>
-      tenant.leases?.some(lease => lease.status === 'active')
+      tenant.leases?.some((lease) => lease.status === 'active')
     )
 
     if (!activeTenants.length) {
@@ -108,23 +113,24 @@ const TenantDemographicsCard: React.FC = () => {
       'Full-time': { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
       'Part-time': { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
       'Self-employed': { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
-      'Student': { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
-      'Retired': { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
+      Student: { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
+      Retired: { count: 0, totalRent: 0, renewals: 0, totalLeases: 0 },
     }
 
     activeTenants.forEach((tenant: Tenant) => {
-      const activeLease = tenant.leases?.find(lease => lease.status === 'active')
+      const activeLease = tenant.leases?.find((lease) => lease.status === 'active')
       if (!activeLease) return
 
       const monthlyRent = Number(activeLease.monthlyRent) || 0
       const totalLeases = tenant.leases?.length || 0
-      const renewedLeases = tenant.leases?.filter(l => l.status === 'renewed').length || 0
+      const renewedLeases = tenant.leases?.filter((l) => l.status === 'renewed').length || 0
 
       // Age group categorization
       if (tenant.personalInfo?.dateOfBirth) {
-        const age = new Date().getFullYear() - new Date(tenant.personalInfo.dateOfBirth).getFullYear()
+        const age =
+          new Date().getFullYear() - new Date(tenant.personalInfo.dateOfBirth).getFullYear()
         let ageGroup: keyof typeof ageGroups
-        
+
         if (age <= 25) ageGroup = '18-25'
         else if (age <= 35) ageGroup = '26-35'
         else if (age <= 45) ageGroup = '36-45'
@@ -141,7 +147,7 @@ const TenantDemographicsCard: React.FC = () => {
       if (tenant.employment?.current?.status) {
         let empType: keyof typeof employmentTypes
         const status = tenant.employment.current.status
-        
+
         if (status === 'employed-full-time') empType = 'Full-time'
         else if (status === 'employed-part-time') empType = 'Part-time'
         else if (status === 'self-employed') empType = 'Self-employed'
@@ -172,11 +178,17 @@ const TenantDemographicsCard: React.FC = () => {
           percentage: (data.count / activeTenants.length) * 100,
           averageRent: data.count > 0 ? data.totalRent / data.count : 0,
           renewalRate: data.totalLeases > 0 ? (data.renewals / data.totalLeases) * 100 : 0,
-          color: ageGroup === '18-25' ? '#3d82f7' : 
-                 ageGroup === '26-35' ? '#06b6d4' : 
-                 ageGroup === '36-45' ? '#10b981' :
-                 ageGroup === '46-60' ? '#f59e0b' : '#f97316',
-          icon: <AccessTimeOutlined sx={{ fontSize: 14 }} />
+          color:
+            ageGroup === '18-25'
+              ? '#3d82f7'
+              : ageGroup === '26-35'
+                ? '#06b6d4'
+                : ageGroup === '36-45'
+                  ? '#10b981'
+                  : ageGroup === '46-60'
+                    ? '#f59e0b'
+                    : '#f97316',
+          icon: <AccessTimeOutlined sx={{ fontSize: 14 }} />,
         })
       })
 
@@ -193,11 +205,17 @@ const TenantDemographicsCard: React.FC = () => {
           percentage: (data.count / activeTenants.length) * 100,
           averageRent: data.count > 0 ? data.totalRent / data.count : 0,
           renewalRate: data.totalLeases > 0 ? (data.renewals / data.totalLeases) * 100 : 0,
-          color: empType === 'Full-time' ? '#10b981' : 
-                 empType === 'Part-time' ? '#f59e0b' : 
-                 empType === 'Self-employed' ? '#3d82f7' :
-                 empType === 'Student' ? '#06b6d4' : '#f97316',
-          icon: <WorkOutlined sx={{ fontSize: 14 }} />
+          color:
+            empType === 'Full-time'
+              ? '#10b981'
+              : empType === 'Part-time'
+                ? '#f59e0b'
+                : empType === 'Self-employed'
+                  ? '#3d82f7'
+                  : empType === 'Student'
+                    ? '#06b6d4'
+                    : '#f97316',
+          icon: <WorkOutlined sx={{ fontSize: 14 }} />,
         })
       })
 
@@ -209,7 +227,15 @@ const TenantDemographicsCard: React.FC = () => {
   if (isLoading) {
     return (
       <StyledCard>
-        <CardContent sx={{ p: 2, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CardContent
+          sx={{
+            p: 2,
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Loading tenant demographics...
           </Typography>
@@ -270,7 +296,10 @@ const TenantDemographicsCard: React.FC = () => {
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {demographicData.map((demo, index) => (
-                <DemographicItem key={`${demo.category}-${demo.label}`} isLast={index === demographicData.length - 1}>
+                <DemographicItem
+                  key={`${demo.category}-${demo.label}`}
+                  isLast={index === demographicData.length - 1}
+                >
                   <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
                     <Box
                       sx={{
@@ -289,7 +318,14 @@ const TenantDemographicsCard: React.FC = () => {
                       {demo.icon}
                     </Box>
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                        }}
+                      >
                         <Typography
                           variant="body2"
                           sx={{
@@ -309,7 +345,7 @@ const TenantDemographicsCard: React.FC = () => {
                           size="small"
                         />
                       </Box>
-                      
+
                       {/* Progress bar */}
                       <Box sx={{ mb: 0.5 }}>
                         <StyledLinearProgress
@@ -318,9 +354,15 @@ const TenantDemographicsCard: React.FC = () => {
                           progresscolor={demo.color}
                         />
                       </Box>
-                      
+
                       {/* Metrics row */}
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
                         <Typography
                           variant="caption"
                           sx={{
@@ -328,7 +370,10 @@ const TenantDemographicsCard: React.FC = () => {
                             color: 'text.secondary',
                           }}
                         >
-                          Avg Rent: <span style={{ color: demo.color, fontWeight: 600 }}>{formatPrice(demo.averageRent)}</span>
+                          Avg Rent:{' '}
+                          <span style={{ color: demo.color, fontWeight: 600 }}>
+                            {formatPrice(demo.averageRent)}
+                          </span>
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
                           <TrendingUpOutlined sx={{ fontSize: 10, color: 'success.main' }} />

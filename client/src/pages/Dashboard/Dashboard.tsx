@@ -5,11 +5,9 @@ import Titlebar from '../../components/basic/Titlebar'
 import InDevelopment from '../../components/common/InDevelopment'
 
 const Dashboard: React.FC = () => {
-  const handleAddDashboardItem = () => {
-  }
+  const handleAddDashboardItem = () => {}
 
-  const handleSearchDashboard = () => {
-  }
+  const handleSearchDashboard = () => {}
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

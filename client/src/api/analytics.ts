@@ -182,7 +182,6 @@ export const analyticsApi = {
     try {
       const response = await apiClient.get<AnalyticsResponse>(`/analytics/${year}/${month}`)
 
-
       return {
         analytics: response.data.data.analytics!,
         comparison: response.data.data.comparison,

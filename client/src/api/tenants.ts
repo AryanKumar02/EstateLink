@@ -310,7 +310,6 @@ export const tenantsApi = {
         }
       }>(url)
 
-
       const { tenants } = response.data.data
       const { pagination } = response.data
 
@@ -366,8 +365,7 @@ export const tenantsApi = {
     if (filters?.limit) params.append('limit', filters.limit.toString())
     if (filters?.search) params.append('search', filters.search)
     if (filters?.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters?.property && filters.property !== 'all')
-      params.append('property', filters.property)
+    if (filters?.property && filters.property !== 'all') params.append('property', filters.property)
     if (filters?.leaseStatus && filters.leaseStatus !== 'all')
       params.append('leaseStatus', filters.leaseStatus)
 
@@ -466,7 +464,7 @@ export const tenantsApi = {
         if (status === 400 && (serverMsg || errors)) {
           const combined = Array.isArray(errors)
             ? errors
-                .map(e => (typeof e === 'string' ? e : e.msg))
+                .map((e) => (typeof e === 'string' ? e : e.msg))
                 .filter((s): s is string => Boolean(s))
                 .join(', ')
             : serverMsg
@@ -626,10 +624,7 @@ export const tenantsApi = {
         outcome: referencingData.outcome ?? 'pending',
         ...referencingData,
       }
-      const response = await apiClient.patch<TenantResponse>(
-        `/tenants/${id}/referencing`,
-        payload
-      )
+      const response = await apiClient.patch<TenantResponse>(`/tenants/${id}/referencing`, payload)
       console.log('UPDATE REFERENCING STATUS API RESPONSE:', response)
       const tenant = response.data.tenant || response.data.data?.tenant
       if (!tenant) {

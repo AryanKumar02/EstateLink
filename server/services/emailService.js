@@ -1,20 +1,16 @@
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 
 import logger from '../utils/logger.js';
 
-let sesClient;
+let mailerSend;
 
-const getSESClient = () => {
-  if (!sesClient) {
-    sesClient = new SESClient({
-      region: process.env.AWS_REGION || 'eu-north-1',
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
+const getMailerSendClient = () => {
+  if (!mailerSend) {
+    mailerSend = new MailerSend({
+      apiKey: process.env.MAILERSEND_API_KEY,
     });
   }
-  return sesClient;
+  return mailerSend;
 };
 
 export const sendPasswordResetEmail = async (email, resetToken) => {
@@ -27,19 +23,13 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
   const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
   try {
-    const command = new SendEmailCommand({
-      Source: 'EstateLink <noreply@estatelink.live>',
-      Destination: {
-        ToAddresses: [email],
-      },
-      Message: {
-        Subject: {
-          Data: 'Password Reset Request - EstateLink',
-          Charset: 'UTF-8',
-        },
-        Body: {
-          Html: {
-            Data: `
+    const sentFrom = new Sender('noreply@estatelink.live', 'EstateLink');
+    const recipients = [new Recipient(email, '')];
+
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setSubject('Password Reset Request - EstateLink').setHtml(`
         <!DOCTYPE html>
         <html>
           <head>
@@ -183,18 +173,14 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
             </div>
           </body>
         </html>
-            `,
-            Charset: 'UTF-8',
-          },
-        },
-      },
-    });
+      `);
 
-    const data = await getSESClient().send(command);
+    const data = await getMailerSendClient().email.send(emailParams);
     logger.info(`Password reset email sent successfully to ${email}`);
     return data;
   } catch (error) {
-    logger.error('Email service error:', error);
+    logger.error('Email service error:', error.message);
+    logger.error('Full error details:', error);
     throw error;
   }
 };
@@ -211,19 +197,13 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   const verifyURL = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
   try {
-    const command = new SendEmailCommand({
-      Source: 'EstateLink <noreply@estatelink.live>',
-      Destination: {
-        ToAddresses: [email],
-      },
-      Message: {
-        Subject: {
-          Data: 'Verify Your Email - EstateLink',
-          Charset: 'UTF-8',
-        },
-        Body: {
-          Html: {
-            Data: `
+    const sentFrom = new Sender('noreply@estatelink.live', 'EstateLink');
+    const recipients = [new Recipient(email, '')];
+
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setSubject('Verify Your Email - EstateLink').setHtml(`
         <!DOCTYPE html>
         <html>
           <head>
@@ -403,18 +383,14 @@ export const sendVerificationEmail = async (email, verificationToken) => {
             </div>
           </body>
         </html>
-            `,
-            Charset: 'UTF-8',
-          },
-        },
-      },
-    });
+      `);
 
-    const data = await getSESClient().send(command);
+    const data = await getMailerSendClient().email.send(emailParams);
     logger.info(`Verification email sent successfully to ${email}`);
     return data;
   } catch (error) {
-    logger.error('Email service error:', error);
+    logger.error('Email service error:', error.message);
+    logger.error('Full error details:', error);
     throw error;
   }
 };

@@ -298,7 +298,6 @@ export const usePropertyApi = () => {
         return { success: false }
       }
     } catch (err: unknown) {
-
       // Handle server validation errors
       if (err && typeof err === 'object' && 'response' in err) {
         const response = err.response as { data?: { errors?: Array<{ msg: string }> } }

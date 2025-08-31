@@ -15,7 +15,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: async (data) => {
-
       // Handle login data based on what's provided
       if (data.token && data.user) {
         // Direct login with both token and user data
@@ -30,14 +29,11 @@ export const useLogin = () => {
           // Fetch user data with the token
           const userResponse = await authApi.getCurrentUser()
 
-
           if (userResponse.user) {
             const store = useAuthStore.getState()
             store.login(userResponse.user, data.token)
-
           }
         } catch (userError) {
-
           // Clear the temporarily stored token
           localStorage.removeItem('authToken')
           const store = useAuthStore.getState()

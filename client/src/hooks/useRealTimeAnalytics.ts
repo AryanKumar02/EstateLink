@@ -219,7 +219,6 @@ export const useRealTimeAnalytics = (options: UseRealTimeAnalyticsOptions = {}) 
   }
 
   const disconnect = () => {
-
     // Clear reconnect timeout
     if (reconnectTimeoutRef.current) {
       window.clearTimeout(reconnectTimeoutRef.current)

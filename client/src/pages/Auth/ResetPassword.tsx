@@ -15,11 +15,9 @@ const ResetPassword: React.FC = () => {
    */
   const showImage = useMediaQuery(theme.breakpoints.up('lg'))
 
-  const handleSuccess = () => {
-  }
+  const handleSuccess = () => {}
 
-  const handleError = () => {
-  }
+  const handleError = () => {}
 
   if (!token) {
     return (
