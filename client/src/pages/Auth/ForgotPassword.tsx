@@ -12,15 +12,9 @@ const ForgotPassword: React.FC = () => {
    */
   const showImage = useMediaQuery(theme.breakpoints.up('lg'))
 
-  const handleSuccess = () => {
-    // Optional: Add any additional success handling here
-    console.log('Password reset email sent successfully')
-  }
+  const handleSuccess = () => {}
 
-  const handleError = (error: string) => {
-    // Optional: Add any additional error handling here
-    console.error('Forgot password error:', error)
-  }
+  const handleError = () => {}
 
   return showImage ? (
     /* ─────────── Large screens: two‑column layout ─────────── */

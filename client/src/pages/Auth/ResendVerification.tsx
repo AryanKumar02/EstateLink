@@ -12,15 +12,9 @@ const ResendVerification: React.FC = () => {
    */
   const showImage = useMediaQuery(theme.breakpoints.up('lg'))
 
-  const handleSuccess = () => {
-    // Optional: Add any additional success handling here
-    console.log('Verification email sent successfully')
-  }
+  const handleSuccess = () => {}
 
-  const handleError = (error: string) => {
-    // Optional: Add any additional error handling here
-    console.error('Resend verification error:', error)
-  }
+  const handleError = () => {}
 
   return showImage ? (
     /* ─────────── Large screens: two‑column layout ─────────── */

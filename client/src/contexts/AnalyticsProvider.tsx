@@ -11,23 +11,23 @@ interface AnalyticsContextValue {
   previous: MonthlyAnalytics | undefined
   comparison: AnalyticsComparison | undefined
   historical: MonthlyAnalytics[]
-  
+
   // Loading states
   isLoading: boolean
   isLoadingCurrent: boolean
   isLoadingComparison: boolean
   isLoadingHistorical: boolean
-  
+
   // Error states
   error: Error | null
   currentError: Error | null
   comparisonError: Error | null
   historicalError: Error | null
-  
+
   // Real-time data
   isConnected: boolean
   lastUpdate: Date | null
-  
+
   // Actions
   refetch: () => void
   connect: () => void
@@ -42,28 +42,22 @@ interface AnalyticsProviderProps {
   autoConnect?: boolean
 }
 
-export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ 
-  children, 
-  autoConnect = true 
+export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
+  children,
+  autoConnect = true,
 }) => {
   const queryClient = useQueryClient()
-  
+
   // Use the existing analytics dashboard hook
   const dashboard = useAnalyticsDashboard()
-  
+
   // Use shared WebSocket connection for real-time updates
-  const {
-    isConnected,
-    lastUpdate,
-    connect,
-    disconnect,
-    refresh
-  } = useSharedRealTimeAnalytics({
+  const { isConnected, lastUpdate, connect, disconnect, refresh } = useSharedRealTimeAnalytics({
     autoConnect,
     onAnalyticsUpdate: (data) => {
       // When WebSocket sends updates, update the query cache instead of triggering new requests
       console.log('Analytics WebSocket update received, updating cache (shared connection)...')
-      
+
       // Convert WebSocket analytics data to MonthlyAnalytics format
       const monthlyAnalytics: MonthlyAnalytics = {
         _id: 'current',
@@ -79,7 +73,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
         occupancy: {
           totalUnits: data.portfolio.totalProperties + data.portfolio.vacantProperties,
           occupiedUnits: data.portfolio.occupiedProperties || 0,
-          occupancyRate: ((data.portfolio.occupiedProperties || 0) / data.portfolio.totalProperties) * 100 || 0,
+          occupancyRate:
+            ((data.portfolio.occupiedProperties || 0) / data.portfolio.totalProperties) * 100 || 0,
           vacantUnits: data.portfolio.vacantProperties || 0,
         },
         expenses: {
@@ -90,7 +85,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
             insurance: 0,
             maintenance: data.expenses.maintenance || 0,
             utilities: 0,
-          }
+          },
         },
         performance: data.performance,
         portfolio: {
@@ -105,38 +100,38 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
         createdAt: data.timestamp,
         updatedAt: data.timestamp,
       }
-      
+
       // Update current analytics cache with converted data
       queryClient.setQueryData(analyticsKeys.current(), monthlyAnalytics)
-      
+
       // Invalidate comparison and historical queries for background refetch
       // Use refetchType: 'none' to avoid loading states
-      void queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({
         queryKey: analyticsKeys.comparison(),
-        refetchType: 'none'
+        refetchType: 'none',
       })
-      void queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({
         queryKey: analyticsKeys.historical(),
-        refetchType: 'none'
+        refetchType: 'none',
       })
-      
+
       // Batch background refetches to prevent rate limiting
       setTimeout(() => {
-        void queryClient.refetchQueries({ 
+        void queryClient.refetchQueries({
           queryKey: analyticsKeys.comparison(),
-          type: 'inactive'
+          type: 'inactive',
         })
-        void queryClient.refetchQueries({ 
+        void queryClient.refetchQueries({
           queryKey: analyticsKeys.historical(),
-          type: 'inactive'
+          type: 'inactive',
         })
       }, 2000) // 2 second delay to batch rapid updates
     },
     onError: (error) => {
       console.error('Analytics WebSocket error (shared connection):', error)
-    }
+    },
   })
-  
+
   // Merge WebSocket data with HTTP data (WebSocket takes precedence)
   const contextValue: AnalyticsContextValue = {
     // Data - prefer HTTP data from dashboard (WebSocket updates are handled via cache)
@@ -144,35 +139,31 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
     previous: dashboard.previous,
     comparison: dashboard.comparison,
     historical: dashboard.historical,
-    
+
     // Loading states
     isLoading: dashboard.isLoading,
     isLoadingCurrent: dashboard.isLoadingCurrent,
     isLoadingComparison: dashboard.isLoadingComparison,
     isLoadingHistorical: dashboard.isLoadingHistorical,
-    
+
     // Error states
     error: dashboard.error,
     currentError: dashboard.currentError,
     comparisonError: dashboard.comparisonError,
     historicalError: dashboard.historicalError,
-    
+
     // Real-time states
     isConnected,
     lastUpdate,
-    
+
     // Actions
     refetch: dashboard.refetch,
     connect,
     disconnect,
-    refresh
+    refresh,
   }
 
-  return (
-    <AnalyticsContext.Provider value={contextValue}>
-      {children}
-    </AnalyticsContext.Provider>
-  )
+  return <AnalyticsContext.Provider value={contextValue}>{children}</AnalyticsContext.Provider>
 }
 
 // Hook to use the analytics context
@@ -192,11 +183,11 @@ export const useCurrentAnalyticsData = () => {
 
 export const useAnalyticsComparison = () => {
   const { comparison, previous, isLoadingComparison, comparisonError } = useAnalyticsContext()
-  return { 
-    comparison, 
-    previous, 
-    isLoading: isLoadingComparison, 
-    error: comparisonError 
+  return {
+    comparison,
+    previous,
+    isLoading: isLoadingComparison,
+    error: comparisonError,
   }
 }
 

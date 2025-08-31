@@ -5,15 +5,9 @@ import Titlebar from '../../components/basic/Titlebar'
 import InDevelopment from '../../components/common/InDevelopment'
 
 const Dashboard: React.FC = () => {
-  const handleAddDashboardItem = () => {
-    console.log('Add dashboard item clicked')
-    // Add your dashboard item creation logic here
-  }
+  const handleAddDashboardItem = () => {}
 
-  const handleSearchDashboard = (searchTerm: string) => {
-    console.log('Dashboard search:', searchTerm)
-    // Add your dashboard search logic here
-  }
+  const handleSearchDashboard = () => {}
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
