@@ -25,9 +25,18 @@ const snapshotValidation = [
   body('year')
     .optional()
     .isInt({ min: 2020, max: 2050 })
-    .withMessage('Year must be between 2020 and 2050'),
-  body('month').optional().isInt({ min: 1, max: 12 }).withMessage('Month must be between 1 and 12'),
-  body('forceRecalculate').optional().isBoolean().withMessage('forceRecalculate must be a boolean'),
+    .withMessage('Year must be between 2020 and 2050')
+    .toInt(),
+  body('month')
+    .optional()
+    .isInt({ min: 1, max: 12 })
+    .withMessage('Month must be between 1 and 12')
+    .toInt(),
+  body('forceRecalculate')
+    .optional()
+    .isBoolean()
+    .withMessage('forceRecalculate must be a boolean')
+    .toBoolean(),
 ];
 
 // Routes

@@ -425,6 +425,29 @@ describe('Analytics API Endpoints', () => {
       expect(response.body.message).toContain('updated');
     });
 
+    it('should respect forceRecalculate when provided as string', async () => {
+      // Create initial snapshot
+      await request(app)
+        .post('/api/v1/analytics/snapshot')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ year: 2024, month: 12 })
+        .expect(201);
+
+      // Attempt to recreate with string "false" - should be treated as false and conflict
+      const response = await request(app)
+        .post('/api/v1/analytics/snapshot')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          year: 2024,
+          month: 12,
+          forceRecalculate: 'false',
+        })
+        .expect(409);
+
+      expect(response.body.status).toBe('error');
+      expect(response.body.message).toContain('already exists');
+    });
+
     it('should validate snapshot parameters', async () => {
       await request(app)
         .post('/api/v1/analytics/snapshot')

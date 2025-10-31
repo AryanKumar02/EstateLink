@@ -160,6 +160,7 @@ const PropertyDetails: React.FC = () => {
             p: { xs: 1, sm: 1.5, md: 3 },
             px: { xs: 1, sm: 1.5, md: 4 }, // More horizontal padding on desktop
             mt: 2,
+            overflowX: 'hidden',
           }}
         >
           {/* Properties content */}
@@ -224,13 +225,16 @@ const PropertyDetails: React.FC = () => {
                       display: 'grid',
                       gridTemplateColumns: {
                         xs: '1fr',
-                        sm: 'repeat(3, 1fr)',
-                        md: 'repeat(3, 1fr)',
+                        sm: 'repeat(auto-fill, minmax(280px, 1fr))',
+                        md: 'repeat(auto-fill, minmax(300px, 1fr))',
                       },
                       gap: { xs: 1.5, sm: 2, md: 2.5 },
                       mb: 4,
-                      justifyItems: 'center',
-                      px: { xs: 0, sm: 2, md: 3, lg: 4, xl: 6 }, // Progressive padding for different screen sizes
+                      justifyItems: 'stretch',
+                      justifyContent: 'center',
+                      width: '100%',
+                      maxWidth: 1280,
+                      mx: 'auto',
                     }}
                   >
                     {currentProperties.map((property) => (

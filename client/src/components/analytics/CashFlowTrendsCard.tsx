@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box, Typography, Card, CardContent } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { TrendingUpOutlined, TrendingDownOutlined, ShowChartOutlined } from '@mui/icons-material'
 import useRealTimeAnalytics from '../../hooks/useRealTimeAnalytics'
 import { useCurrency } from '../../hooks/useCurrency'
+import { useHistoricalAnalyticsData } from '../../contexts/AnalyticsProvider'
+import type { MonthlyAnalytics } from '../../api/analytics'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: '#ffffff',
@@ -61,63 +63,128 @@ const GridLine = styled('line')({
   strokeDasharray: '2,2',
 })
 
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+
+const toNumber = (value: unknown): number => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : 0
+  }
+  return 0
+}
+
+const extractMetrics = (source: unknown) => {
+  if (!source || typeof source !== 'object') {
+    return { revenue: 0, expenses: 0, cashFlow: 0 }
+  }
+
+  const record = source as Record<string, unknown>
+  const revenueRecord =
+    (record.monthlyRevenue as number | string | undefined) ??
+    ((record.revenue as { total?: number | string } | undefined)?.total)
+  const expensesRecord =
+    (record.monthlyExpenses as number | string | undefined) ??
+    ((record.expenses as { total?: number | string } | undefined)?.total)
+  const performanceRecord = record.performance as { netOperatingIncome?: number | string } | null
+
+  const revenue = toNumber(revenueRecord)
+  const expenses = toNumber(expensesRecord)
+
+  const netOperatingIncomeValue =
+    (record.netOperatingIncome as number | string | undefined) ??
+    (performanceRecord?.netOperatingIncome ?? null)
+
+  let cashFlow = toNumber(netOperatingIncomeValue)
+  if (netOperatingIncomeValue == null) {
+    cashFlow = revenue - expenses
+  }
+
+  return { revenue, expenses, cashFlow }
+}
+
+type TrendDataPoint = {
+  month: string
+  year: number
+  monthNumber: number
+  cashFlow: number
+  revenue: number
+  expenses: number
+  isReal: boolean
+  source: 'realtime' | 'snapshot' | 'placeholder'
+}
+
 const CashFlowTrendsCard: React.FC = () => {
   const { analytics } = useRealTimeAnalytics()
   const { formatPrice } = useCurrency()
+  const { data: historicalAnalytics = [] } = useHistoricalAnalyticsData()
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
 
-  const currentCashFlow = Number(analytics?.netOperatingIncome ?? 0)
-  const currentRevenue = Number(analytics?.monthlyRevenue ?? 0)
-  const currentExpenses = Number(analytics?.monthlyExpenses ?? 0)
-
-  // Generate trend data using real analytics data
-  const generateTrendData = () => {
+  const trendsData = useMemo<TrendDataPoint[]>(() => {
     const now = new Date()
-    const months = []
+    const months: Array<{
+      monthName: string
+      year: number
+      month: number
+      isCurrentMonth: boolean
+    }> = []
 
-    // Generate last 6 months including current month
     for (let i = 5; i >= 0; i--) {
       const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
-      const monthName = monthDate.toLocaleDateString('en-US', { month: 'short' })
-      const year = monthDate.getFullYear()
-      const month = monthDate.getMonth() + 1
-      const isCurrentMonth = i === 0
-
       months.push({
-        monthName,
-        year,
-        month,
-        isCurrentMonth,
+        monthName: monthDate.toLocaleDateString('en-US', { month: 'short' }),
+        year: monthDate.getFullYear(),
+        month: monthDate.getMonth() + 1,
+        isCurrentMonth: i === 0,
       })
     }
 
-    return months.map((monthInfo, index) => {
-      if (monthInfo.isCurrentMonth && analytics) {
-        // Use real current month data
-        return {
-          month: monthInfo.monthName,
-          cashFlow: currentCashFlow,
-          revenue: currentRevenue,
-          expenses: currentExpenses,
-          index,
-          isReal: true,
-        }
-      } else {
-        // For historical months, show 0 since no data exists yet
-        // In the future, this would query MonthlyAnalytics collection
-        return {
-          month: monthInfo.monthName,
-          cashFlow: 0,
-          revenue: 0,
-          expenses: 0,
-          index,
-          isReal: false,
+    const analyticsByMonth = historicalAnalytics.reduce<Map<string, MonthlyAnalytics>>(
+      (acc, entry) => {
+        const key = `${entry.year}-${String(entry.month).padStart(2, '0')}`
+        acc.set(key, entry)
+        return acc
+      },
+      new Map()
+    )
+
+    return months.map((monthInfo) => {
+      const key = `${monthInfo.year}-${String(monthInfo.month).padStart(2, '0')}`
+      const snapshot = analyticsByMonth.get(key)
+
+      let source: MonthlyAnalytics | typeof analytics | null = snapshot ?? null
+      let sourceType: TrendDataPoint['source'] = snapshot ? 'snapshot' : 'placeholder'
+
+      if (monthInfo.isCurrentMonth) {
+        if (analytics) {
+          source = analytics
+          sourceType = 'realtime'
+        } else if (snapshot) {
+          sourceType = 'snapshot'
+        } else {
+          sourceType = 'placeholder'
         }
       }
-    })
-  }
 
-  const trendsData = generateTrendData()
+      const metrics = extractMetrics(source)
+
+      return {
+        month: monthInfo.monthName,
+        year: monthInfo.year,
+        monthNumber: monthInfo.month,
+        cashFlow: metrics.cashFlow,
+        revenue: metrics.revenue,
+        expenses: metrics.expenses,
+        isReal: source !== null,
+        source: sourceType,
+      }
+    })
+  }, [analytics, historicalAnalytics])
+
+  const currentMonthData = trendsData[trendsData.length - 1]
+  const currentCashFlow = currentMonthData?.cashFlow ?? 0
 
   // Calculate chart dimensions and scaling
   const chartWidth = 280
@@ -126,53 +193,92 @@ const CashFlowTrendsCard: React.FC = () => {
   const plotWidth = chartWidth - padding.left - padding.right
   const plotHeight = chartHeight - padding.top - padding.bottom
 
-  // Find min/max for scaling
-  const cashFlows = trendsData.map((d) => Number(d.cashFlow))
-  const nonZeroFlows = cashFlows.filter((flow) => flow !== 0)
+  const realCashFlows = trendsData.filter((d) => d.isReal).map((d) => d.cashFlow)
+  let minValue: number
+  let maxValue: number
 
-  // If we only have zeros, create a small range around zero for better visualization
-  const minValue = nonZeroFlows.length > 0 ? Math.min(...cashFlows, 0) * 1.1 : -1000
-  const maxValue = nonZeroFlows.length > 0 ? Math.max(...cashFlows, 0) * 1.1 : 1000
-  const valueRange = maxValue - minValue
+  if (realCashFlows.length > 0) {
+    const minReal = Math.min(...realCashFlows)
+    const maxReal = Math.max(...realCashFlows)
+    const paddingAmount = Math.max(Math.abs(minReal), Math.abs(maxReal), 100) * 0.1
+    minValue = minReal - paddingAmount
+    maxValue = maxReal + paddingAmount
 
-  // Calculate points for line chart
+    if (minValue === maxValue) {
+      minValue -= 100
+      maxValue += 100
+    }
+  } else {
+    minValue = -1000
+    maxValue = 1000
+  }
+
+  const valueRange = maxValue - minValue || 1
+
   const points = trendsData.map((data, index) => {
-    const x = padding.left + (index / (trendsData.length - 1)) * plotWidth
-    const y = padding.top + ((maxValue - data.cashFlow) / valueRange) * plotHeight
+    const x = padding.left + (index / Math.max(trendsData.length - 1, 1)) * plotWidth
+    const unclampedY = padding.top + ((maxValue - data.cashFlow) / valueRange) * plotHeight
+    const y = clamp(unclampedY, padding.top, padding.top + plotHeight)
     return { x, y, data }
   })
 
-  // Calculate trend - find first non-zero value for meaningful comparison
-  const firstNonZeroIndex = trendsData.findIndex((d) => d.cashFlow !== 0)
-  const lastNonZeroIndex = trendsData
-    .slice()
-    .reverse()
-    .findIndex((d) => d.cashFlow !== 0)
-  const lastIndex = lastNonZeroIndex !== -1 ? trendsData.length - 1 - lastNonZeroIndex : -1
+  const realIndices = trendsData.reduce<number[]>((acc, data, index) => {
+    if (data.isReal) {
+      acc.push(index)
+    }
+    return acc
+  }, [])
 
+  const lastValue = currentCashFlow
   let trendPercentage = 0
   let isPositiveTrend = true
-  const lastValue = Number(trendsData[trendsData.length - 1]?.cashFlow || 0)
 
-  if (firstNonZeroIndex !== -1 && lastIndex !== -1 && firstNonZeroIndex !== lastIndex) {
-    const firstValue = Number(trendsData[firstNonZeroIndex].cashFlow)
-    const lastValueForTrend = Number(trendsData[lastIndex].cashFlow)
-    trendPercentage = ((lastValueForTrend - firstValue) / Math.abs(firstValue)) * 100
-    isPositiveTrend = trendPercentage >= 0
-  } else if (lastIndex !== -1) {
-    // Only one data point - show if it's positive or negative
-    const lastValueForTrend = Number(trendsData[lastIndex].cashFlow)
-    isPositiveTrend = lastValueForTrend >= 0
-    trendPercentage = 0 // No trend with single point
+  if (realIndices.length >= 2) {
+    const firstIndex = realIndices[0]
+    const lastIndex = realIndices[realIndices.length - 1]
+    const firstValue = trendsData[firstIndex]?.cashFlow ?? 0
+    const lastValueForTrend = trendsData[lastIndex]?.cashFlow ?? 0
+    const baseline = Math.abs(firstValue)
+
+    if (baseline > 0) {
+      trendPercentage = ((lastValueForTrend - firstValue) / baseline) * 100
+    } else if (Math.abs(lastValueForTrend) > 0) {
+      trendPercentage = 100
+    }
+
+    isPositiveTrend = lastValueForTrend >= firstValue
+  } else if (realIndices.length === 1) {
+    const value = trendsData[realIndices[0]]?.cashFlow ?? 0
+    isPositiveTrend = value >= 0
+    trendPercentage = 0
+  } else {
+    trendPercentage = 0
+    isPositiveTrend = true
   }
 
-  // Grid lines
-  const zeroY = padding.top + ((maxValue - 0) / valueRange) * plotHeight
+  if (!Number.isFinite(trendPercentage)) {
+    trendPercentage = 0
+  }
+
+  const zeroPosition = padding.top + ((maxValue - 0) / valueRange) * plotHeight
+  const zeroY = clamp(zeroPosition, padding.top, padding.top + plotHeight)
   const gridLines = [
-    { y: padding.top, value: maxValue },
-    { y: zeroY, value: 0 },
-    { y: padding.top + plotHeight, value: minValue },
+    { y: padding.top },
+    { y: zeroY },
+    { y: padding.top + plotHeight },
   ]
+
+  const realDataCount = trendsData.filter((d) => d.isReal).length
+  const hoveredData = hoveredPoint !== null ? points[hoveredPoint] : null
+  const hoveredFlowDescriptor =
+    hoveredData && hoveredData.data.isReal
+      ? `${hoveredData.data.cashFlow >= 0 ? 'Positive flow' : 'Negative flow'} • ${
+          hoveredData.data.source === 'realtime' ? 'Live data' : 'Snapshot'
+        }`
+      : ''
+  const hoveredSourceDescriptor =
+    hoveredData && !hoveredData.data.isReal ? 'No snapshot yet' : ''
+  const trendDisplay = Math.abs(trendPercentage).toFixed(1)
 
   return (
     <StyledCard>
@@ -234,7 +340,7 @@ const CashFlowTrendsCard: React.FC = () => {
                 gap: 0.5,
               }}
             >
-              {isPositiveTrend ? '↗' : '↘'} {Math.abs(trendPercentage).toFixed(1)}%
+              {isPositiveTrend ? '↗' : '↘'} {trendDisplay}%
             </Typography>
           </Box>
         </Box>
@@ -333,23 +439,21 @@ const CashFlowTrendsCard: React.FC = () => {
                   isPositive={point.data.cashFlow >= 0}
                   isReal={point.data.isReal}
                   onMouseEnter={() => {
-                    console.log('Mouse entered point', index)
                     setHoveredPoint(index)
                   }}
                   onMouseLeave={() => {
-                    console.log('Mouse left point')
                     setHoveredPoint(null)
                   }}
                 />
               ))}
 
               {/* Customized SVG tooltip */}
-              {hoveredPoint !== null && (
+              {hoveredData && (
                 <g>
                   {/* Tooltip shadow */}
                   <rect
-                    x={points[hoveredPoint].x - 65}
-                    y={points[hoveredPoint].y - 62}
+                    x={hoveredData.x - 65}
+                    y={hoveredData.y - 62}
                     width="130"
                     height="50"
                     fill="rgba(0,0,0,0.15)"
@@ -359,8 +463,8 @@ const CashFlowTrendsCard: React.FC = () => {
 
                   {/* Main tooltip background */}
                   <rect
-                    x={points[hoveredPoint].x - 65}
-                    y={points[hoveredPoint].y - 62}
+                    x={hoveredData.x - 65}
+                    y={hoveredData.y - 62}
                     width="130"
                     height="50"
                     fill="#ffffff"
@@ -371,48 +475,44 @@ const CashFlowTrendsCard: React.FC = () => {
 
                   {/* Month label */}
                   <text
-                    x={points[hoveredPoint].x}
-                    y={points[hoveredPoint].y - 45}
+                    x={hoveredData.x}
+                    y={hoveredData.y - 45}
                     textAnchor="middle"
                     fill="rgba(0,0,0,0.6)"
                     fontSize="9"
                     fontWeight="500"
                   >
-                    {points[hoveredPoint].data.month} 2024
+                    {hoveredData.data.month} {hoveredData.data.year}
                   </text>
 
                   {/* Cash Flow amount */}
                   <text
-                    x={points[hoveredPoint].x}
-                    y={points[hoveredPoint].y - 32}
+                    x={hoveredData.x}
+                    y={hoveredData.y - 32}
                     textAnchor="middle"
-                    fill={points[hoveredPoint].data.cashFlow >= 0 ? '#1976d2' : '#e67e22'}
+                    fill={hoveredData.data.cashFlow >= 0 ? '#1976d2' : '#e67e22'}
                     fontSize="12"
                     fontWeight="700"
                   >
-                    {points[hoveredPoint].data.isReal
-                      ? formatPrice(points[hoveredPoint].data.cashFlow)
-                      : 'No data'}
+                    {hoveredData.data.isReal
+                      ? formatPrice(hoveredData.data.cashFlow)
+                      : 'No snapshot'}
                   </text>
 
                   {/* Status indicator */}
                   <text
-                    x={points[hoveredPoint].x}
-                    y={points[hoveredPoint].y - 19}
+                    x={hoveredData.x}
+                    y={hoveredData.y - 19}
                     textAnchor="middle"
                     fill="rgba(0,0,0,0.5)"
                     fontSize="8"
                   >
-                    {points[hoveredPoint].data.isReal
-                      ? points[hoveredPoint].data.cashFlow >= 0
-                        ? 'Positive Flow'
-                        : 'Negative Flow'
-                      : 'Awaiting Data'}
+                    {hoveredData.data.isReal ? hoveredFlowDescriptor : hoveredSourceDescriptor}
                   </text>
 
                   {/* Tooltip pointer */}
                   <polygon
-                    points={`${points[hoveredPoint].x - 6},${points[hoveredPoint].y - 12} ${points[hoveredPoint].x + 6},${points[hoveredPoint].y - 12} ${points[hoveredPoint].x},${points[hoveredPoint].y - 5}`}
+                    points={`${hoveredData.x - 6},${hoveredData.y - 12} ${hoveredData.x + 6},${hoveredData.y - 12} ${hoveredData.x},${hoveredData.y - 5}`}
                     fill="#ffffff"
                     stroke="rgba(0,0,0,0.08)"
                     strokeWidth="1"
@@ -454,7 +554,7 @@ const CashFlowTrendsCard: React.FC = () => {
               variant="body2"
               sx={{ fontWeight: 600, fontSize: '0.7rem', color: 'text.primary' }}
             >
-              {trendsData.filter((d) => d.isReal).length}/6 months
+              {realDataCount}/6 months
             </Typography>
           </Box>
           <Box sx={{ textAlign: 'center' }}>

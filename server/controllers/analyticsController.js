@@ -116,10 +116,14 @@ export const createMonthlySnapshot = async (req, res) => {
     }
 
     const userId = req.user.id;
-    const { year, month, forceRecalculate } = req.body;
+    const { year, month } = req.body;
+    const forceRecalculate =
+      req.body.forceRecalculate === true || req.body.forceRecalculate === 'true';
 
-    const targetYear = year || new Date().getFullYear();
-    const targetMonth = month || new Date().getMonth() + 1;
+    const targetYear =
+      typeof year === 'number' && !Number.isNaN(year) ? year : new Date().getFullYear();
+    const targetMonth =
+      typeof month === 'number' && !Number.isNaN(month) ? month : new Date().getMonth() + 1;
 
     // Check if snapshot already exists
     const existingSnapshot = await MonthlyAnalytics.getForMonth(userId, targetYear, targetMonth);

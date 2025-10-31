@@ -18,7 +18,6 @@ import HomeIcon from '@mui/icons-material/Home'
 import BusinessIcon from '@mui/icons-material/Business'
 import PeopleIcon from '@mui/icons-material/People'
 import BarChartIcon from '@mui/icons-material/BarChart'
-import BuildIcon from '@mui/icons-material/Build'
 import SettingsIcon from '@mui/icons-material/Settings'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -46,7 +45,6 @@ const Sidebar: React.FC = () => {
     { text: 'Properties', icon: <BusinessIcon />, path: '/properties' },
     { text: 'Tenants', icon: <PeopleIcon />, path: '/tenants' },
     { text: 'Analytics', icon: <BarChartIcon />, path: '/analytics' },
-    { text: 'Maintenance', icon: <BuildIcon />, path: '/maintenance' },
     { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
   ]
 
