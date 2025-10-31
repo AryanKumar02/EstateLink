@@ -14,9 +14,9 @@ import { tenantsApi } from '../../api'
 import type { Tenant } from '../../types/tenant'
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
   borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  boxShadow: theme.palette.mode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
   transition: 'all 0.3s ease-in-out',
   border: 'none',
   height: 350,
@@ -26,16 +26,16 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: 12,
   },
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 4px 20px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
     transform: 'translateY(-2px)',
   },
 }))
 
 const StyledLinearProgress = styled(LinearProgress)<{ progresscolor: string }>(
-  ({ progresscolor }) => ({
+  ({ progresscolor, theme }) => ({
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#f5f5f5',
     '& .MuiLinearProgress-bar': {
       backgroundColor: progresscolor,
       borderRadius: 3,
@@ -43,12 +43,12 @@ const StyledLinearProgress = styled(LinearProgress)<{ progresscolor: string }>(
   })
 )
 
-const DemographicItem = styled(Box)<{ isLast?: boolean }>(({ isLast }) => ({
+const DemographicItem = styled(Box)<{ isLast?: boolean }>(({ isLast, theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '10px 0',
-  borderBottom: isLast ? 'none' : '1px solid #f0f0f0',
+  borderBottom: isLast ? 'none' : (theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0'),
 }))
 
 const CategoryChip = styled(Chip)<{ categorycolor: string }>(({ categorycolor }) => ({

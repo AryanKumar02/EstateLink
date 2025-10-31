@@ -71,7 +71,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               sx={{
                 p: 0.5,
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  backgroundColor: 'action.hover',
                 },
               }}
             >
@@ -81,7 +81,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         ),
       }}
       sx={{
-        backgroundColor: 'white',
+        backgroundColor: 'background.paper',
         borderRadius: 1,
         width: width,
         minWidth: isMobile ? '120px' : '150px',
@@ -91,17 +91,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
             padding: isMobile ? '8px 12px' : '8.5px 14px',
           },
           '& fieldset': {
-            borderColor: 'rgba(0, 0, 0, 0.12)',
+            borderColor: 'divider',
             borderWidth: '1px',
             transition:
               'border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           },
           '&:hover fieldset': {
-            borderColor: 'rgba(0, 0, 0, 0.23)',
+            borderColor: 'text.secondary',
             borderWidth: '2px',
           },
           '&.Mui-focused fieldset': {
-            borderColor: 'rgba(0, 0, 0, 0.3)',
+            borderColor: 'primary.main',
             borderWidth: '2px',
           },
         },

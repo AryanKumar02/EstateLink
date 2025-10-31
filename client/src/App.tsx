@@ -1,13 +1,14 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useMemo } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThemeProvider, CssBaseline, Box, CircularProgress } from '@mui/material'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
-import theme from './theme'
+import { createAppTheme } from './theme'
 import { queryClient } from './lib/queryClient'
 import ErrorBoundary from './components/common/ErrorBoundary.tsx'
 import { initializePreloading } from './utils/preloadResources'
+import { useThemeMode } from './stores/themeStore'
 
 // Immediate imports for landing page (critical path)
 import LandingPage from './pages/Landing/LandingPage.tsx'
@@ -54,9 +55,12 @@ const PageLoadingFallback = () => (
 
 // Temporary placeholder components - replace with actual pages
 const MaintenancePage = () => <div>Maintenance Page</div>
-const SettingsPage = () => <div>Settings Page</div>
+const Settings = lazy(() => import('./pages/Settings/Settings.tsx'))
 
 function App() {
+  const themeMode = useThemeMode()
+  const theme = useMemo(() => createAppTheme(themeMode), [themeMode])
+
   // Initialize resource preloading for performance
   React.useEffect(() => {
     // Use requestIdleCallback to not block main thread
@@ -180,7 +184,7 @@ function App() {
                   path="/settings"
                   element={
                     <ProtectedRoute>
-                      <SettingsPage />
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />

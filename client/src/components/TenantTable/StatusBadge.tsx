@@ -79,11 +79,11 @@ const getStatusConfig = (status: TenantStatus, theme: Theme) => {
 
   // Default/unknown status - gray
   return {
-    color: theme.palette.grey[600],
-    backgroundColor: theme.palette.grey[200],
+    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.action.hover,
     icon: '?',
     label: status,
-    textColor: theme.palette.grey[800],
+    textColor: theme.palette.text.primary,
   }
 }
 

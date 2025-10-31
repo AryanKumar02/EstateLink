@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Typography, Card, CardContent, IconButton } from '@mui/material'
+import { Box, Typography, Card, CardContent, IconButton, useTheme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -17,9 +17,9 @@ import { propertiesApi } from '../../api'
 import type { Property } from '../../types/property'
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
   borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  boxShadow: theme.palette.mode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
   transition: 'all 0.3s ease-in-out',
   border: 'none',
   height: 320,
@@ -29,7 +29,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: 12,
   },
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 4px 20px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
     transform: 'translateY(-2px)',
   },
 }))
@@ -58,31 +58,34 @@ const ProgressFill = styled(Box)<{ width: number }>(({ theme, width }) => ({
   },
 }))
 
-const ExpenseItem = styled(Box)<{ clickable?: boolean }>(({ clickable }) => ({
+const ExpenseItem = styled(Box)<{ clickable?: boolean }>(({ clickable, theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   marginBottom: 2,
   padding: '3px 5px',
   borderRadius: 8,
-  backgroundColor: 'rgba(0,0,0,0.02)',
+  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
   transition: 'all 0.2s ease-in-out',
   cursor: clickable ? 'pointer' : 'default',
   '&:hover': {
-    backgroundColor: clickable ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.04)',
+    backgroundColor: clickable
+      ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')
+      : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'),
     transform: clickable ? 'translateX(2px)' : 'translateX(1px)',
-    boxShadow: clickable ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+    boxShadow: clickable ? (theme.palette.mode === 'dark' ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)') : 'none',
   },
   '& .expense-icon': {
     fontSize: 12,
     marginRight: 4,
     padding: 1,
     borderRadius: 6,
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.8)',
   },
 }))
 
 const RevenueBreakdownCard: React.FC = () => {
+  const theme = useTheme()
   const { analytics, isConnected } = useRealTimeAnalytics()
   const { formatPrice } = useCurrency()
 
@@ -397,7 +400,7 @@ const RevenueBreakdownCard: React.FC = () => {
                     sx={{
                       width: '1px',
                       height: '12px',
-                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
                     }}
                   />
                   <Typography
@@ -471,7 +474,7 @@ const RevenueBreakdownCard: React.FC = () => {
                   >
                     {formatPrice(property.taxes)}
                   </Typography>
-                  <Box sx={{ width: '1px', height: '12px', backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                  <Box sx={{ width: '1px', height: '12px', backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }} />
                   <Typography
                     variant="caption"
                     sx={{
@@ -585,7 +588,7 @@ const RevenueBreakdownCard: React.FC = () => {
               y="55"
               textAnchor="middle"
               fontSize="10"
-              fill="rgba(0,0,0,0.6)"
+              fill={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
               fontWeight="500"
             >
               Total
@@ -595,7 +598,7 @@ const RevenueBreakdownCard: React.FC = () => {
               y="68"
               textAnchor="middle"
               fontSize="11"
-              fill="rgba(0,0,0,0.8)"
+              fill={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)'}
               fontWeight="700"
             >
               {formatPrice(totalInsurance)}
@@ -678,7 +681,7 @@ const RevenueBreakdownCard: React.FC = () => {
                     sx={{
                       width: '1px',
                       height: '12px',
-                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
                     }}
                   />
                   <Typography
@@ -794,7 +797,7 @@ const RevenueBreakdownCard: React.FC = () => {
                   >
                     {formatPrice(property.maintenance)}
                   </Typography>
-                  <Box sx={{ width: '1px', height: '10px', backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                  <Box sx={{ width: '1px', height: '10px', backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }} />
                   <Typography
                     variant="caption"
                     sx={{
@@ -970,7 +973,7 @@ const RevenueBreakdownCard: React.FC = () => {
                   >
                     {formatPrice(property.utilities)}
                   </Typography>
-                  <Box sx={{ width: '1px', height: '10px', backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                  <Box sx={{ width: '1px', height: '10px', backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }} />
                   <Typography
                     variant="caption"
                     sx={{
@@ -1094,7 +1097,7 @@ const RevenueBreakdownCard: React.FC = () => {
               sx={{
                 color: 'text.secondary',
                 '&:hover': {
-                  backgroundColor: 'rgba(0,0,0,0.04)',
+                  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                   color: 'text.primary',
                 },
               }}

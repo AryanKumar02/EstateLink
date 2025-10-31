@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Typography, Card, CardContent } from '@mui/material'
+import { Box, Typography, Card, CardContent, useTheme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { HomeOutlined } from '@mui/icons-material'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -8,9 +8,9 @@ import { useCurrency } from '../../hooks/useCurrency'
 import useRealTimeAnalytics from '../../hooks/useRealTimeAnalytics'
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
   borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  boxShadow: theme.palette.mode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
   transition: 'all 0.3s ease-in-out',
   border: 'none',
   height: 350,
@@ -20,20 +20,20 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: 12,
   },
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 4px 20px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
     transform: 'translateY(-2px)',
   },
 }))
 
-const PropertyItem = styled(Box)<{ isLast?: boolean; rank: number }>(({ isLast }) => ({
+const PropertyItem = styled(Box)<{ isLast?: boolean; rank: number }>(({ isLast, theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: '12px 0',
-  borderBottom: isLast ? 'none' : '1px solid rgba(0, 0, 0, 0.06)',
+  borderBottom: isLast ? 'none' : (theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0, 0, 0, 0.06)'),
   transition: 'all 0.2s ease-in-out',
   '&:hover': {
     transform: 'translateX(2px)',
-    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'rgba(0, 0, 0, 0.02)',
     borderRadius: 8,
     padding: '12px 8px',
     margin: '0 -8px',
@@ -105,6 +105,7 @@ interface PropertyData {
 }
 
 const TopPropertiesCard: React.FC = () => {
+  const theme = useTheme()
   const { formatPrice } = useCurrency()
   const queryClient = useQueryClient()
 
@@ -238,14 +239,14 @@ const TopPropertiesCard: React.FC = () => {
                 width: '4px',
               },
               '&::-webkit-scrollbar-track': {
-                background: 'rgba(0,0,0,0.1)',
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
                 borderRadius: '2px',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'rgba(0,0,0,0.3)',
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
                 borderRadius: '2px',
                 '&:hover': {
-                  background: 'rgba(0,0,0,0.4)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
                 },
               },
             }}
@@ -330,7 +331,7 @@ const TopPropertiesCard: React.FC = () => {
             sx={{
               mt: 2,
               pt: 1.5,
-              borderTop: '1px solid rgba(0, 0, 0, 0.06)',
+              borderTop: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0, 0, 0, 0.06)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',

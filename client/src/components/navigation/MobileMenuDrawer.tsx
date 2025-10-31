@@ -36,12 +36,14 @@ const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ open, onClose, navL
       sx={{
         '& .MuiDrawer-paper': {
           width: 290,
-          background: '#fff',
-          color: '#222',
+          background: theme.palette.mode === 'dark' ? 'background.paper' : '#fff',
+          color: theme.palette.mode === 'dark' ? 'text.primary' : '#222',
           pt: 0,
           borderTopRightRadius: 18,
           borderBottomRightRadius: 18,
-          boxShadow: `0 8px 32px 0 ${alpha(theme.palette.secondary.main, 0.13)}`,
+          boxShadow: theme.palette.mode === 'dark'
+            ? `0 8px 32px 0 rgba(0, 0, 0, 0.5)`
+            : `0 8px 32px 0 ${alpha(theme.palette.secondary.main, 0.13)}`,
         },
       }}
     >
@@ -105,7 +107,7 @@ const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ open, onClose, navL
                   {...(isHashLink ? { href: link.to } : { to: link.to })}
                   onClick={onClose}
                   sx={{
-                    color: '#222',
+                    color: theme.palette.mode === 'dark' ? 'text.primary' : '#222',
                     fontWeight: 700,
                     borderRadius: 2,
                     mb: 0.5,
@@ -120,7 +122,7 @@ const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ open, onClose, navL
                     },
                     ...(link.label === 'Get Started' && {
                       background: theme.palette.secondary.main,
-                      color: '#fff',
+                      color: 'common.white',
                       mb: 1.5,
                       mt: 1,
                       fontWeight: 800,
@@ -132,7 +134,7 @@ const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ open, onClose, navL
                         'background 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1)',
                       '&:hover': {
                         background: theme.palette.secondary.dark || theme.palette.secondary.main, // Fallback if dark is not defined
-                        color: '#fff',
+                        color: 'common.white',
                         boxShadow: `0 6px 24px 0 ${alpha(theme.palette.secondary.dark || theme.palette.secondary.main, 0.18)}`,
                       },
                     }),
@@ -162,7 +164,7 @@ const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ open, onClose, navL
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <Divider sx={{ borderColor: theme.palette.divider, mt: 2, mb: 1 }} />
-      <Box sx={{ px: 2, pb: 2, textAlign: 'center', color: '#b0b8c1', fontSize: '0.97rem' }}>
+      <Box sx={{ px: 2, pb: 2, textAlign: 'center', color: theme.palette.mode === 'dark' ? 'text.secondary' : '#b0b8c1', fontSize: '0.97rem' }}>
         &copy; {new Date().getFullYear()} EstateLink
       </Box>
     </Drawer>

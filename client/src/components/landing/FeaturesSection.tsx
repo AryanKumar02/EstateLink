@@ -32,7 +32,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, ico
       sx={{
         p: 3,
         borderRadius: '16px',
-        border: '1px solid rgba(0,0,0,0.06)',
+        border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)',
         display: 'flex',
         flexDirection: 'column',
         textAlign: 'left',
@@ -41,9 +41,9 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, ico
         transition: theme.transitions.create(['box-shadow', 'transform'], {
           duration: theme.transitions.duration.short,
         }),
-        boxShadow: '0px 2px 6px rgba(0,0,0,0.04)',
+        boxShadow: theme.palette.mode === 'dark' ? '0px 2px 6px rgba(0,0,0,0.3)' : '0px 2px 6px rgba(0,0,0,0.04)',
         '&:hover': {
-          boxShadow: '0 10px 24px -6px rgba(0,0,0,0.12)',
+          boxShadow: theme.palette.mode === 'dark' ? '0 10px 24px -6px rgba(0,0,0,0.5)' : '0 10px 24px -6px rgba(0,0,0,0.12)',
           transform: 'translateY(-2px)',
         },
       }}
@@ -136,7 +136,7 @@ const FeaturesSection: React.FC = () => {
       sx={{
         py: { xs: 6, md: 10 },
         px: { xs: 2, sm: 3, md: 4 },
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: theme.palette.mode === 'dark' ? 'background.default' : theme.palette.common.white,
       }}
     >
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 4 } }}>

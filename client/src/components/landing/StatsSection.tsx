@@ -82,7 +82,7 @@ const StatsSection: React.FC = () => {
         py: { xs: 8, md: 10 },
         px: { xs: 2, sm: 3, md: 4 },
         backgroundColor: 'secondary.main',
-        color: 'white',
+        color: 'common.white',
         textAlign: 'center',
       }}
     >

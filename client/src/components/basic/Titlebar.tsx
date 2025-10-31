@@ -25,6 +25,8 @@ interface TitlebarProps {
   showSearch?: boolean
   searchTerm?: string
   children?: React.ReactNode // For custom content instead of search
+  hideSearch?: boolean
+  hideAddButton?: boolean
 }
 
 const Titlebar: React.FC<TitlebarProps> = ({
@@ -37,10 +39,16 @@ const Titlebar: React.FC<TitlebarProps> = ({
   showSearch = true,
   searchTerm = '',
   children,
+  hideSearch = false,
+  hideAddButton = false,
 }) => {
   const theme = useTheme()
+  const isDark = theme.palette.mode === 'dark'
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
+
+  // Determine if search should be shown
+  const shouldShowSearch = showSearch && !hideSearch
 
   return (
     <>
@@ -80,7 +88,7 @@ const Titlebar: React.FC<TitlebarProps> = ({
           }}
         >
           {/* Desktop Search Bar */}
-          {showSearch && !isMobile && (
+          {shouldShowSearch && !isMobile && (
             <SearchBar
               placeholder={searchPlaceholder}
               onSearch={onSearch}
@@ -89,7 +97,7 @@ const Titlebar: React.FC<TitlebarProps> = ({
           )}
 
           {/* Mobile Search Icon */}
-          {showSearch && isMobile && (
+          {shouldShowSearch && isMobile && (
             <Box sx={{ position: 'relative' }}>
               <IconButton
                 onClick={() => setMobileSearchOpen(true)}
@@ -104,15 +112,21 @@ const Titlebar: React.FC<TitlebarProps> = ({
                   '&:hover': {
                     backgroundColor: searchTerm
                       ? theme.palette.secondary.dark
+                      : isDark
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(0, 0, 0, 0.04)',
-                    color: 'rgba(0, 0, 0, 0.8)',
+                    color: isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)',
                   },
                 }}
               >
                 <SearchIcon
                   sx={{
                     fontSize: '1.25rem',
-                    color: searchTerm ? 'white' : 'rgba(0, 0, 0, 0.6)',
+                    color: searchTerm
+                      ? 'white'
+                      : isDark
+                      ? 'rgba(255, 255, 255, 0.7)'
+                      : 'rgba(0, 0, 0, 0.6)',
                   }}
                 />
               </IconButton>
@@ -135,7 +149,7 @@ const Titlebar: React.FC<TitlebarProps> = ({
 
           {children}
 
-          {!children && onAdd && (
+          {!children && !hideAddButton && onAdd && (
             <>
               {/* Desktop Add Button */}
               {!isMobile && (

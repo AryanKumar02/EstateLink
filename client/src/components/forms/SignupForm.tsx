@@ -30,8 +30,8 @@ const AnimatedCheckboxIcon = ({ checked }: { checked: boolean }) => {
         height: 22,
         borderRadius: 2,
         border: '2px solid',
-        borderColor: checked ? theme.palette.secondary.main : '#b0b8c1',
-        background: checked ? theme.palette.secondary.main : '#fff',
+        borderColor: checked ? theme.palette.secondary.main : 'text.disabled',
+        background: checked ? theme.palette.secondary.main : 'background.paper',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -46,7 +46,7 @@ const AnimatedCheckboxIcon = ({ checked }: { checked: boolean }) => {
           transform: checked ? 'scale(1)' : 'scale(0.7)',
           transition:
             'opacity 0.22s cubic-bezier(.4,1.3,.6,1), transform 0.22s cubic-bezier(.4,1.3,.6,1)',
-          color: '#fff',
+          color: 'common.white',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -63,14 +63,14 @@ const AnimatedCheckboxIcon = ({ checked }: { checked: boolean }) => {
 const commonTextFieldStyles = {
   '& .MuiOutlinedInput-root': {
     borderRadius: 2,
-    background: '#f7f8fa',
+    background: 'background.default',
     boxShadow: 'none',
     transition:
       'border-color 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)',
   },
   '& .MuiOutlinedInput-notchedOutline': {
     borderWidth: '1.5px',
-    borderColor: '#e0e3e7',
+    borderColor: 'divider',
     transition:
       'border-color 0.35s cubic-bezier(0.4,0,0.2,1), border-width 0.25s cubic-bezier(0.4,0,0.2,1)',
   },
@@ -80,7 +80,7 @@ const commonTextFieldStyles = {
     height: { xs: 38, md: 40 },
     fontSize: { xs: '0.95rem', md: '1.05rem' },
     background: 'transparent',
-    color: '#222',
+    color: 'text.primary',
     fontWeight: 500,
     letterSpacing: 0.01,
   },
@@ -229,7 +229,7 @@ const SignupForm: React.FC = () => {
         variant="h4"
         sx={{
           mb: 2,
-          color: 'black',
+          color: 'text.primary',
           textAlign: 'center',
           fontSize: { xs: '1.7rem', md: '2rem' },
           fontWeight: 700,
@@ -241,8 +241,8 @@ const SignupForm: React.FC = () => {
         variant="subtitle1"
         sx={{
           mb: { xs: 1.5, md: 2 },
-          color: 'black',
-          opacity: 0.4,
+          color: 'text.secondary',
+          
           textAlign: 'center',
           fontSize: { xs: '0.92rem', md: '1.05rem' },
         }}
@@ -277,7 +277,7 @@ const SignupForm: React.FC = () => {
                 display: 'block',
                 fontSize: { xs: '0.89rem', md: '1.01rem' },
                 fontWeight: 600,
-                color: 'black',
+                color: 'text.primary',
               }}
             >
               First Name
@@ -302,7 +302,7 @@ const SignupForm: React.FC = () => {
                 display: 'block',
                 fontSize: { xs: '0.89rem', md: '1.01rem' },
                 fontWeight: 600,
-                color: 'black',
+                color: 'text.primary',
               }}
             >
               Second Name
@@ -328,7 +328,7 @@ const SignupForm: React.FC = () => {
               display: 'block',
               fontSize: { xs: '0.89rem', md: '1.01rem' },
               fontWeight: 600,
-              color: 'black',
+              color: 'text.primary',
             }}
           >
             Email
@@ -353,7 +353,7 @@ const SignupForm: React.FC = () => {
               display: 'block',
               fontSize: { xs: '0.89rem', md: '1.01rem' },
               fontWeight: 600,
-              color: 'black',
+              color: 'text.primary',
             }}
           >
             Password
@@ -431,7 +431,7 @@ const SignupForm: React.FC = () => {
             label={
               <Box
                 component="span"
-                sx={{ fontWeight: 700, color: 'black', fontSize: '0.97rem', display: 'inline' }}
+                sx={{ fontWeight: 700, color: 'text.primary', fontSize: '0.97rem', display: 'inline' }}
               >
                 I{' '}
                 <Box
@@ -525,7 +525,7 @@ const SignupForm: React.FC = () => {
         sx={{
           mt: 0,
           fontSize: { xs: '0.85rem', md: '0.95rem' },
-          color: 'black',
+          color: 'text.primary',
           textAlign: 'center',
           display: 'flex',
           alignItems: 'center',

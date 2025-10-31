@@ -131,7 +131,7 @@ const LoginForm: React.FC = () => {
       {location.state && (location.state as { from?: string })?.from && (
         <IconButton
           onClick={() => void navigate(-1)}
-          sx={{ position: 'absolute', left: 0, top: 0, mt: 1, ml: 1, color: 'black' }}
+          sx={{ position: 'absolute', left: 0, top: 0, mt: 1, ml: 1, color: 'text.primary' }}
           aria-label="Back"
         >
           <ArrowBackIosNewIcon fontSize="small" />
@@ -141,7 +141,7 @@ const LoginForm: React.FC = () => {
         variant="h4"
         sx={{
           mb: 2,
-          color: 'black',
+          color: 'text.primary',
           textAlign: { xs: 'center', md: 'left' },
           fontSize: { xs: '1.7rem', md: '2rem' },
           fontWeight: 700,
@@ -153,8 +153,7 @@ const LoginForm: React.FC = () => {
         variant="subtitle1"
         sx={{
           mb: { xs: 2, md: 3 },
-          color: 'black',
-          opacity: 0.4,
+          color: 'text.secondary',
           textAlign: { xs: 'center', md: 'left' },
           fontSize: { xs: '1rem', md: '1.2rem' },
         }}
@@ -177,7 +176,7 @@ const LoginForm: React.FC = () => {
               display: 'block',
               fontSize: { xs: '0.95rem', md: '1.1rem' },
               fontWeight: 600,
-              color: 'black',
+              color: 'text.primary',
             }}
           >
             Email
@@ -193,14 +192,14 @@ const LoginForm: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
-                background: '#f7f8fa',
+                background: 'background.default',
                 boxShadow: 'none',
                 transition:
                   'border-color 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)',
               },
               '& .MuiOutlinedInput-notchedOutline': {
                 borderWidth: '1.5px',
-                borderColor: '#e0e3e7',
+                borderColor: 'divider',
                 transition:
                   'border-color 0.35s cubic-bezier(0.4,0,0.2,1), border-width 0.25s cubic-bezier(0.4,0,0.2,1)',
               },
@@ -218,7 +217,7 @@ const LoginForm: React.FC = () => {
                 height: { xs: 44, md: 48 },
                 fontSize: { xs: '0.95rem', md: '1.05rem' },
                 background: 'transparent',
-                color: '#222',
+                color: 'text.primary',
                 fontWeight: 500,
                 letterSpacing: 0.01,
               },
@@ -235,7 +234,7 @@ const LoginForm: React.FC = () => {
               display: 'block',
               fontSize: { xs: '0.95rem', md: '1.1rem' },
               fontWeight: 600,
-              color: 'black',
+              color: 'text.primary',
             }}
           >
             Password
@@ -251,14 +250,14 @@ const LoginForm: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
-                background: '#f7f8fa',
+                background: 'background.default',
                 boxShadow: 'none',
                 transition:
                   'border-color 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)',
               },
               '& .MuiOutlinedInput-notchedOutline': {
                 borderWidth: '1.5px',
-                borderColor: '#e0e3e7',
+                borderColor: 'divider',
                 transition:
                   'border-color 0.35s cubic-bezier(0.4,0,0.2,1), border-width 0.25s cubic-bezier(0.4,0,0.2,1)',
               },
@@ -276,7 +275,7 @@ const LoginForm: React.FC = () => {
                 height: { xs: 44, md: 48 },
                 fontSize: { xs: '0.95rem', md: '1.05rem' },
                 background: 'transparent',
-                color: '#222',
+                color: 'text.primary',
                 fontWeight: 500,
                 letterSpacing: 0.01,
               },
@@ -337,7 +336,7 @@ const LoginForm: React.FC = () => {
             />
           }
           label={
-            <Box component="span" sx={{ fontWeight: 600, color: 'black', fontSize: '0.97rem' }}>
+            <Box component="span" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.97rem' }}>
               Remember me
             </Box>
           }
@@ -382,7 +381,7 @@ const LoginForm: React.FC = () => {
         sx={{
           mb: 1,
           fontSize: { xs: '0.85rem', md: '0.95rem' },
-          color: 'black',
+          color: 'text.primary',
           display: 'flex',
           alignItems: 'center',
           gap: 0.5,
@@ -414,7 +413,7 @@ const LoginForm: React.FC = () => {
         sx={{
           mt: { xs: 2, md: 2.5 },
           fontSize: { xs: '0.85rem', md: '0.95rem' },
-          color: 'black',
+          color: 'text.primary',
           display: 'flex',
           alignItems: 'center',
           gap: 0.5,

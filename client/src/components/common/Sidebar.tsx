@@ -32,6 +32,7 @@ const mobileDrawerWidth = 240
 
 const Sidebar: React.FC = () => {
   const theme = useTheme()
+  const isDark = theme.palette.mode === 'dark'
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const isTablet = useMediaQuery(theme.breakpoints.down('lg'))
   const navigate = useNavigate()
@@ -299,7 +300,9 @@ const Sidebar: React.FC = () => {
             left: 0,
             right: 0,
             height: 1,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+            background: isDark
+              ? 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)'
+              : 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
           },
         }}
       >
@@ -326,9 +329,10 @@ const Sidebar: React.FC = () => {
             display: 'block',
             fontSize: isMobile ? '0.65rem' : '0.75rem',
             fontWeight: 600,
-            color: 'grey.500',
+            color: 'text.secondary',
             letterSpacing: '1px',
             fontFamily: theme.typography.fontFamily,
+            opacity: 0.7,
           }}
         >
           NAVIGATION
@@ -370,7 +374,9 @@ const Sidebar: React.FC = () => {
                   '&.Mui-selected': {
                     backgroundColor: theme.palette.secondary.main,
                     color: 'white',
-                    boxShadow: `0 4px 12px 0 rgba(61, 130, 247, 0.3)`,
+                    boxShadow: isDark
+                      ? `0 4px 12px 0 rgba(61, 130, 247, 0.5)`
+                      : `0 4px 12px 0 rgba(61, 130, 247, 0.3)`,
                     '&:hover': {
                       backgroundColor: theme.palette.secondary.dark,
                     },
@@ -388,13 +394,13 @@ const Sidebar: React.FC = () => {
                   },
                   '& .MuiListItemIcon-root': {
                     minWidth: isMobile ? 35 : 40,
-                    color: selectedIndex === index ? 'white' : theme.palette.grey[600],
+                    color: selectedIndex === index ? 'white' : 'text.secondary',
                     transition: 'color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   },
                   '& .MuiListItemText-primary': {
                     fontSize: isMobile ? '0.85rem' : '0.95rem',
                     fontWeight: selectedIndex === index ? 600 : 500,
-                    color: selectedIndex === index ? 'white' : theme.palette.grey[700],
+                    color: selectedIndex === index ? 'white' : 'text.primary',
                     transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   },
                 }}
@@ -416,9 +422,12 @@ const Sidebar: React.FC = () => {
           sx={{
             p: isMobile ? 2 : 2.5,
             borderRadius: theme.shape.borderRadius + 2,
-            background: 'linear-gradient(135deg, #f7f8fa 0%, #ffffff 100%)',
+            background: isDark
+              ? 'linear-gradient(135deg, rgba(26, 31, 58, 0.6) 0%, rgba(19, 23, 41, 0.8) 100%)'
+              : 'linear-gradient(135deg, #f7f8fa 0%, #ffffff 100%)',
             border: '1px solid',
-            borderColor: theme.palette.grey[200],
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : theme.palette.grey[200],
+            backdropFilter: isDark ? 'blur(10px)' : 'none',
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -426,13 +435,15 @@ const Sidebar: React.FC = () => {
               <Avatar
                 src={user?.avatar}
                 sx={{
-                  bgcolor: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                  bgcolor: theme.palette.secondary.main,
                   width: isMobile ? 36 : 44,
                   height: isMobile ? 36 : 44,
                   mr: isMobile ? 1.5 : 2,
                   fontSize: isMobile ? '0.9rem' : '1.1rem',
                   fontWeight: 600,
-                  boxShadow: '0 2px 8px 0 rgba(3, 108, 163, 0.2)',
+                  boxShadow: isDark
+                    ? '0 2px 8px 0 rgba(61, 130, 247, 0.4)'
+                    : '0 2px 8px 0 rgba(3, 108, 163, 0.2)',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
@@ -444,7 +455,7 @@ const Sidebar: React.FC = () => {
                   sx={{
                     fontSize: isMobile ? '0.85rem' : '0.95rem',
                     fontWeight: 600,
-                    color: theme.palette.grey[800],
+                    color: 'text.primary',
                     lineHeight: 1.2,
                     transition: 'color 0.3s ease',
                     fontFamily: theme.typography.fontFamily,
@@ -455,7 +466,7 @@ const Sidebar: React.FC = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: theme.palette.grey[600],
+                    color: 'text.secondary',
                     fontSize: isMobile ? '0.7rem' : '0.8rem',
                     mt: 0.5,
                     transition: 'color 0.3s ease',
@@ -486,8 +497,8 @@ const Sidebar: React.FC = () => {
                 })
               }}
               sx={{
-                color: theme.palette.grey[600],
-                backgroundColor: theme.palette.grey[100],
+                color: 'text.secondary',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : theme.palette.grey[100],
                 width: isMobile ? 32 : 36,
                 height: isMobile ? 32 : 36,
                 ml: 1,
@@ -551,9 +562,13 @@ const Sidebar: React.FC = () => {
             '& .MuiDrawer-paper': {
               width: currentDrawerWidth,
               boxSizing: 'border-box',
-              borderRight: 'none',
-              background: `linear-gradient(to bottom, #ffffff, ${theme.palette.background.default})`,
-              boxShadow: '0 4px 20px 0 rgba(0, 0, 0, 0.05)',
+              borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+              background: isDark
+                ? `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default})`
+                : `linear-gradient(to bottom, #ffffff, ${theme.palette.background.default})`,
+              boxShadow: isDark
+                ? '0 4px 20px 0 rgba(0, 0, 0, 0.3)'
+                : '0 4px 20px 0 rgba(0, 0, 0, 0.05)',
             },
           }}
         >
@@ -574,9 +589,13 @@ const Sidebar: React.FC = () => {
             '& .MuiDrawer-paper': {
               width: currentDrawerWidth,
               boxSizing: 'border-box',
-              borderRight: 'none',
-              background: `linear-gradient(to bottom, #ffffff, ${theme.palette.background.default})`,
-              boxShadow: '0 4px 20px 0 rgba(0, 0, 0, 0.05)',
+              borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+              background: isDark
+                ? `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default})`
+                : `linear-gradient(to bottom, #ffffff, ${theme.palette.background.default})`,
+              boxShadow: isDark
+                ? '0 4px 20px 0 rgba(0, 0, 0, 0.3)'
+                : '0 4px 20px 0 rgba(0, 0, 0, 0.05)',
             },
           }}
         >

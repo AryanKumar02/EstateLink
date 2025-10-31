@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Box, Typography, Card, CardContent } from '@mui/material'
+import { Box, Typography, Card, CardContent, useTheme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { TrendingUpOutlined, TrendingDownOutlined, ShowChartOutlined } from '@mui/icons-material'
 import useRealTimeAnalytics from '../../hooks/useRealTimeAnalytics'
@@ -8,9 +8,9 @@ import { useHistoricalAnalyticsData } from '../../contexts/AnalyticsProvider'
 import type { MonthlyAnalytics } from '../../api/analytics'
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
   borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  boxShadow: theme.palette.mode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
   transition: 'all 0.3s ease-in-out',
   border: 'none',
   height: 320,
@@ -20,19 +20,19 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: 12,
   },
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 4px 20px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
     transform: 'translateY(-2px)',
   },
 }))
 
-const ChartContainer = styled(Box)({
+const ChartContainer = styled(Box)(({ theme }) => ({
   height: 160,
   position: 'relative',
   margin: '16px 8px 8px 8px',
-  border: '1px solid rgba(0,0,0,0.06)',
+  border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)',
   borderRadius: 8,
-  backgroundColor: 'rgba(0,0,0,0.01)',
-})
+  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)',
+}))
 
 const LineChart = styled('svg')({
   width: '100%',
@@ -42,8 +42,10 @@ const LineChart = styled('svg')({
 
 const DataPoint = styled('circle')<{ isPositive: boolean; isReal: boolean }>(
   ({ theme, isPositive, isReal }) => ({
-    fill: !isReal ? 'rgba(0,0,0,0.4)' : isPositive ? theme.palette.secondary.main : '#e67e22',
-    stroke: '#ffffff',
+    fill: !isReal
+      ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)')
+      : isPositive ? theme.palette.secondary.main : '#e67e22',
+    stroke: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
     strokeWidth: !isReal ? 3 : 2,
     r: 4,
     cursor: 'pointer',
@@ -57,11 +59,11 @@ const DataPoint = styled('circle')<{ isPositive: boolean; isReal: boolean }>(
   })
 )
 
-const GridLine = styled('line')({
-  stroke: 'rgba(0,0,0,0.08)',
+const GridLine = styled('line')(({ theme }) => ({
+  stroke: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
   strokeWidth: 1,
   strokeDasharray: '2,2',
-})
+}))
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
@@ -117,6 +119,7 @@ type TrendDataPoint = {
 }
 
 const CashFlowTrendsCard: React.FC = () => {
+  const theme = useTheme()
   const { analytics } = useRealTimeAnalytics()
   const { formatPrice } = useCurrency()
   const { data: historicalAnalytics = [] } = useHistoricalAnalyticsData()
@@ -366,7 +369,7 @@ const CashFlowTrendsCard: React.FC = () => {
                 y1={zeroY}
                 x2={chartWidth - padding.right}
                 y2={zeroY}
-                stroke="rgba(0,0,0,0.2)"
+                stroke={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}
                 strokeWidth={1.5}
               />
 
@@ -467,8 +470,8 @@ const CashFlowTrendsCard: React.FC = () => {
                     y={hoveredData.y - 62}
                     width="130"
                     height="50"
-                    fill="#ffffff"
-                    stroke="rgba(0,0,0,0.08)"
+                    fill={theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff'}
+                    stroke={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}
                     strokeWidth="1"
                     rx="8"
                   />
@@ -478,7 +481,7 @@ const CashFlowTrendsCard: React.FC = () => {
                     x={hoveredData.x}
                     y={hoveredData.y - 45}
                     textAnchor="middle"
-                    fill="rgba(0,0,0,0.6)"
+                    fill={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
                     fontSize="9"
                     fontWeight="500"
                   >
@@ -504,7 +507,7 @@ const CashFlowTrendsCard: React.FC = () => {
                     x={hoveredData.x}
                     y={hoveredData.y - 19}
                     textAnchor="middle"
-                    fill="rgba(0,0,0,0.5)"
+                    fill={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'}
                     fontSize="8"
                   >
                     {hoveredData.data.isReal ? hoveredFlowDescriptor : hoveredSourceDescriptor}
@@ -513,8 +516,8 @@ const CashFlowTrendsCard: React.FC = () => {
                   {/* Tooltip pointer */}
                   <polygon
                     points={`${hoveredData.x - 6},${hoveredData.y - 12} ${hoveredData.x + 6},${hoveredData.y - 12} ${hoveredData.x},${hoveredData.y - 5}`}
-                    fill="#ffffff"
-                    stroke="rgba(0,0,0,0.08)"
+                    fill={theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff'}
+                    stroke={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}
                     strokeWidth="1"
                   />
                 </g>
@@ -528,7 +531,7 @@ const CashFlowTrendsCard: React.FC = () => {
                   y={chartHeight - 5}
                   textAnchor="middle"
                   fontSize="10"
-                  fill="rgba(0,0,0,0.6)"
+                  fill={theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
                 >
                   {point.data.month}
                 </text>
@@ -543,7 +546,7 @@ const CashFlowTrendsCard: React.FC = () => {
             display: 'flex',
             justifyContent: 'space-between',
             pt: 1,
-            borderTop: '1px solid rgba(0,0,0,0.06)',
+            borderTop: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.06)',
           }}
         >
           <Box sx={{ textAlign: 'center' }}>

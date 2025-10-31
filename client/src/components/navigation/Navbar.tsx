@@ -10,6 +10,9 @@ import { Link as RouterLink } from 'react-router-dom'
 import { prefetchByPath } from '../../utils/prefetchRoutes'
 import MobileMenuDrawer from './MobileMenuDrawer'
 import { useTheme } from '@mui/material/styles'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
+import { useThemeMode, useToggleTheme } from '../../stores/themeStore'
 
 const navLinks = [
   { label: 'Features', to: '/#features' },
@@ -21,6 +24,8 @@ const navLinks = [
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const theme = useTheme()
+  const themeMode = useThemeMode()
+  const toggleTheme = useToggleTheme()
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen)
@@ -31,13 +36,17 @@ const Navbar: React.FC = () => {
       position="fixed"
       elevation={0}
       sx={{
-        background: '#fff',
-        color: '#000',
-        boxShadow: '0 2px 8px 0 rgba(3,108,163,0.08)',
+        background: theme.palette.mode === 'dark' ? 'background.paper' : '#fff',
+        color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
+        boxShadow: theme.palette.mode === 'dark'
+          ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)'
+          : '0 2px 8px 0 rgba(3,108,163,0.08)',
         width: '100%',
         top: 0,
         left: 0,
         right: 0,
+        borderBottom: theme.palette.mode === 'dark' ? '1px solid' : 'none',
+        borderColor: theme.palette.mode === 'dark' ? 'divider' : 'transparent',
       }}
     >
       <Toolbar sx={{ minHeight: { xs: 56, sm: 64 }, px: { xs: 1, sm: 2, md: 3 } }}>
@@ -61,7 +70,7 @@ const Navbar: React.FC = () => {
             sx={{
               fontWeight: 900,
               letterSpacing: { xs: '-0.8px', sm: '-1.2px' },
-              color: '#000000',
+              color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
               textDecoration: 'none',
               fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
               ml: 0,
@@ -80,6 +89,24 @@ const Navbar: React.FC = () => {
           ></Box>
         </Box>
 
+        {/* Dark mode toggle */}
+        <IconButton
+          onClick={toggleTheme}
+          sx={{
+            mr: { xs: 1, md: 2 },
+            color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
+            transition: 'color 0.22s',
+            '&:hover': { color: theme.palette.secondary.main },
+          }}
+          aria-label="toggle dark mode"
+        >
+          {themeMode === 'dark' ? (
+            <Brightness7Icon sx={{ fontSize: { xs: '1.25rem', sm: '1.4rem' } }} />
+          ) : (
+            <Brightness4Icon sx={{ fontSize: { xs: '1.25rem', sm: '1.4rem' } }} />
+          )}
+        </IconButton>
+
         {/* Desktop nav links */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5, alignItems: 'center' }}>
           {navLinks.map((link) => {
@@ -94,7 +121,7 @@ const Navbar: React.FC = () => {
                   if (!isHashLink && !isMailto) prefetchByPath(link.to)
                 }}
                 sx={{
-                  color: '#000',
+                  color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
                   fontWeight: 700,
                   fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
                   textTransform: 'none',
@@ -118,7 +145,7 @@ const Navbar: React.FC = () => {
             component={RouterLink}
             to="/login"
             sx={{
-              color: '#000',
+              color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
               fontWeight: 700,
               fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
               textTransform: 'none',
@@ -152,15 +179,19 @@ const Navbar: React.FC = () => {
               py: { xs: 0.8, sm: 1, md: 1.2 },
               minWidth: 'auto',
               whiteSpace: 'nowrap',
-              boxShadow: '0 4px 18px 0 rgba(3,108,163,0.13)',
-              color: '#fff',
+              boxShadow: theme.palette.mode === 'dark'
+                ? '0 4px 18px 0 rgba(61,130,247,0.3)'
+                : '0 4px 18px 0 rgba(3,108,163,0.13)',
+              color: 'common.white',
               background: theme.palette.secondary.main,
               transition:
                 'background 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1)',
               '&:hover': {
                 background: theme.palette.secondary.dark || theme.palette.secondary.main,
-                color: '#fff',
-                boxShadow: '0 6px 24px 0 rgba(61,130,247,0.18)',
+                color: 'common.white',
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 6px 24px 0 rgba(61,130,247,0.4)'
+                  : '0 6px 24px 0 rgba(61,130,247,0.18)',
               },
             }}
           >
@@ -174,7 +205,7 @@ const Navbar: React.FC = () => {
           color="inherit"
           sx={{
             display: { md: 'none' },
-            color: '#000',
+            color: theme.palette.mode === 'dark' ? 'text.primary' : '#000',
             mr: { xs: 0.5, sm: 1.5 },
             p: { xs: 1, sm: 1.5 },
             transition: 'color 0.22s',

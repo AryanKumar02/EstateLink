@@ -218,10 +218,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       aria-label={`Property: ${property.title}. Click to view details.`}
       sx={{
         borderRadius: 2,
-        boxShadow: '0 2px 8px 0 rgba(0, 0, 0, 0.1)',
+        boxShadow: theme.palette.mode === 'dark' ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)' : '0 2px 8px 0 rgba(0, 0, 0, 0.1)',
         transition: 'box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         '&:hover': {
-          boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.15)',
+          boxShadow: theme.palette.mode === 'dark' ? '0 4px 12px 0 rgba(0, 0, 0, 0.5)' : '0 4px 12px 0 rgba(0, 0, 0, 0.15)',
         },
         '&:focus': {
           outline: `2px solid ${theme.palette.secondary.main}`,
@@ -289,7 +289,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             position: 'absolute',
             bottom: 12,
             left: 12,
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.9)',
             backdropFilter: 'blur(4px)',
             borderRadius: 1,
             px: 1,
@@ -299,12 +299,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             gap: 0.5,
           }}
         >
-          <PropertyTypeIcon sx={{ fontSize: '0.8rem', color: theme.palette.grey[600] }} />
+          <PropertyTypeIcon sx={{ fontSize: '0.8rem', color: theme.palette.mode === 'dark' ? theme.palette.grey[300] : theme.palette.grey[600] }} />
           <Typography
             sx={{
               fontSize: '0.7rem',
               fontWeight: 600,
-              color: theme.palette.grey[700],
+              color: theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[700],
             }}
           >
             {propertyTypeConfig.label}
@@ -321,10 +321,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             position: 'absolute',
             top: 8,
             left: 8,
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.9)',
             backdropFilter: 'blur(4px)',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 1)',
+              backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 1)',
             },
             '&:focus': {
               outline: 'none',
@@ -380,7 +380,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             sx={{
               fontWeight: 700,
               fontSize: '1rem',
-              color: theme.palette.grey[900],
+              color: theme.palette.mode === 'dark' ? 'text.primary' : theme.palette.grey[900],
               mb: 0.5,
               lineHeight: 1.2,
               display: '-webkit-box',
@@ -395,7 +395,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: theme.palette.grey[600],
+              color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
               fontSize: '0.85rem',
               mb: 0.5,
               display: '-webkit-box',
@@ -425,7 +425,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                     <Typography
                       variant="body2"
                       sx={{
-                        color: theme.palette.grey[600],
+                        color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
                         fontSize: '0.85rem',
                         fontWeight: 600,
                       }}
@@ -537,7 +537,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                               <Typography
                                 variant="body2"
                                 sx={{
-                                  color: theme.palette.grey[700],
+                                  color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[700],
                                   fontSize: '0.8rem',
                                 }}
                               >
@@ -584,7 +584,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                       <Typography
                         variant="body2"
                         sx={{
-                          color: theme.palette.grey[500],
+                          color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[500],
                           fontSize: '0.75rem',
                           fontStyle: 'italic',
                           textAlign: 'center',
@@ -603,7 +603,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   <Typography
                     variant="body2"
                     sx={{
-                      color: theme.palette.grey[500],
+                      color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[500],
                       fontSize: '0.8rem',
                       fontStyle: 'italic',
                     }}
@@ -613,7 +613,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   <Typography
                     variant="body2"
                     sx={{
-                      color: theme.palette.grey[400],
+                      color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
                       fontSize: '0.75rem',
                     }}
                   >
@@ -640,11 +640,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               {/* Bedroom and Bathroom Info */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <BedIcon sx={{ fontSize: '1rem', color: theme.palette.grey[600] }} />
+                  <BedIcon sx={{ fontSize: '1rem', color: theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[600] }} />
                   <Typography
                     variant="body2"
                     sx={{
-                      color: theme.palette.grey[600],
+                      color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
                       fontSize: '0.85rem',
                     }}
                   >
@@ -653,16 +653,16 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                 </Box>
                 <Typography
                   variant="body2"
-                  sx={{ color: theme.palette.grey[400], fontSize: '0.85rem' }}
+                  sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400], fontSize: '0.85rem' }}
                 >
                   •
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <BathtubIcon sx={{ fontSize: '1rem', color: theme.palette.grey[600] }} />
+                  <BathtubIcon sx={{ fontSize: '1rem', color: theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[600] }} />
                   <Typography
                     variant="body2"
                     sx={{
-                      color: theme.palette.grey[600],
+                      color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
                       fontSize: '0.85rem',
                     }}
                   >
@@ -676,11 +676,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                 {/* Square Footage */}
                 {property.squareFootage && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <SquareFootIcon sx={{ fontSize: '0.9rem', color: theme.palette.grey[600] }} />
+                    <SquareFootIcon sx={{ fontSize: '0.9rem', color: theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[600] }} />
                     <Typography
                       variant="body2"
                       sx={{
-                        color: theme.palette.grey[600],
+                        color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
                         fontSize: '0.8rem',
                       }}
                     >
@@ -698,17 +698,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                     {property.squareFootage && (
                       <Typography
                         variant="body2"
-                        sx={{ color: theme.palette.grey[400], fontSize: '0.8rem' }}
+                        sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400], fontSize: '0.8rem' }}
                       >
                         •
                       </Typography>
                     )}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <CalendarIcon sx={{ fontSize: '0.9rem', color: theme.palette.grey[600] }} />
+                      <CalendarIcon sx={{ fontSize: '0.9rem', color: theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[600] }} />
                       <Typography
                         variant="body2"
                         sx={{
-                          color: theme.palette.grey[600],
+                          color: theme.palette.mode === 'dark' ? 'text.secondary' : theme.palette.grey[600],
                           fontSize: '0.8rem',
                         }}
                       >
@@ -772,7 +772,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           '& .MuiPaper-root': {
             borderRadius: 2,
             minWidth: 160,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            boxShadow: theme.palette.mode === 'dark' ? '0 4px 12px rgba(0, 0, 0, 0.5)' : '0 4px 12px rgba(0, 0, 0, 0.15)',
           },
         }}
       >

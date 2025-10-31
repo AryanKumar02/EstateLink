@@ -113,9 +113,10 @@ const InDevelopment: React.FC<InDevelopmentProps> = ({
               gap: 1,
               mt: 3,
               p: 2,
-              backgroundColor: 'grey.50',
+              backgroundColor: 'action.hover',
               borderRadius: 2,
-              border: `1px solid ${theme.palette.grey[200]}`,
+              border: '1px solid',
+              borderColor: 'divider',
             }}
           >
             <Schedule
@@ -142,7 +143,8 @@ const InDevelopment: React.FC<InDevelopmentProps> = ({
           sx={{
             mt: 4,
             pt: 3,
-            borderTop: `1px solid ${theme.palette.grey[200]}`,
+            borderTop: '1px solid',
+            borderColor: 'divider',
           }}
         >
           <Typography

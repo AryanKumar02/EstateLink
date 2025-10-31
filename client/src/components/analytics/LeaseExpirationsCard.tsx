@@ -1,50 +1,58 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Box, Typography, Card, CardContent, Chip, LinearProgress } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { styled, alpha, useTheme } from '@mui/material/styles'
 import { CalendarTodayOutlined } from '@mui/icons-material'
 import { useQuery } from '@tanstack/react-query'
 import { tenantsApi } from '../../api'
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
-  borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
-  transition: 'all 0.3s ease-in-out',
-  border: 'none',
-  height: 350,
-  width: '100%',
-  [theme.breakpoints.down('sm')]: {
-    height: 330,
-    borderRadius: 12,
-  },
-  '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
-    transform: 'translateY(-2px)',
+const StyledCard = styled(Card)(({ theme }) => {
+  const isDark = theme.palette.mode === 'dark'
+  return {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 16,
+    boxShadow: isDark ? '0 4px 16px rgba(0, 0, 0, 0.45)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
+    transition: 'all 0.3s ease-in-out',
+    border: isDark ? `1px solid ${alpha(theme.palette.common.white, 0.08)}` : 'none',
+    height: 350,
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      height: 330,
+      borderRadius: 12,
+    },
+    '&:hover': {
+      boxShadow: isDark ? '0 6px 18px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
+      transform: 'translateY(-2px)',
+    },
+  }
+})
+
+const StyledLinearProgress = styled(LinearProgress, {
+  shouldForwardProp: (prop) => prop !== 'progresscolor',
+})<{ progresscolor: string }>(({ theme, progresscolor }) => ({
+  height: 6,
+  borderRadius: 3,
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? alpha(theme.palette.common.white, 0.12)
+      : alpha(theme.palette.common.black, 0.06),
+  '& .MuiLinearProgress-bar': {
+    backgroundColor: progresscolor,
+    borderRadius: 3,
   },
 }))
-
-const StyledLinearProgress = styled(LinearProgress)<{ progresscolor: string }>(
-  ({ progresscolor }) => ({
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#f5f5f5',
-    '& .MuiLinearProgress-bar': {
-      backgroundColor: progresscolor,
-      borderRadius: 3,
-    },
-  })
-)
 
 const ProgressItem = styled(Box)({
   marginBottom: 12,
 })
 
-const LeaseItem = styled(Box)<{ isLast?: boolean }>(({ isLast }) => ({
+const LeaseItem = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isLast',
+})<{ isLast?: boolean }>(({ theme, isLast }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '8px 0',
-  borderBottom: isLast ? 'none' : '1px solid #f0f0f0',
+  borderBottom: isLast ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.8)}`,
 }))
 
 interface LeaseExpirationData {
@@ -79,6 +87,53 @@ interface Tenant {
 }
 
 const LeaseExpirationsCard: React.FC = () => {
+  const theme = useTheme()
+  const isDark = theme.palette.mode === 'dark'
+  const scrollbarTrackColor = alpha(
+    isDark ? theme.palette.common.white : theme.palette.common.black,
+    isDark ? 0.12 : 0.08
+  )
+  const scrollbarThumbColor = alpha(
+    isDark ? theme.palette.common.white : theme.palette.common.black,
+    isDark ? 0.4 : 0.28
+  )
+  const scrollbarThumbHoverColor = alpha(
+    isDark ? theme.palette.common.white : theme.palette.common.black,
+    isDark ? 0.55 : 0.4
+  )
+
+  const getDaysChipStyle = useCallback(
+    (days: number) => {
+      if (days <= 15) {
+        const color = theme.palette.error.main
+        return {
+          backgroundColor: color,
+          color: theme.palette.getContrastText(color),
+        }
+      }
+      if (days <= 30) {
+        const color = theme.palette.warning.main
+        return {
+          backgroundColor: color,
+          color: theme.palette.getContrastText(color),
+        }
+      }
+
+      const neutralBg = isDark
+        ? alpha(theme.palette.common.white, 0.22)
+        : theme.palette.grey[600]
+      const neutralText = isDark
+        ? theme.palette.common.white
+        : theme.palette.getContrastText(theme.palette.grey[600])
+
+      return {
+        backgroundColor: neutralBg,
+        color: neutralText,
+      }
+    },
+    [theme, isDark]
+  )
+
   // Fetch tenants data
   const { data: tenants = [], isLoading } = useQuery({
     queryKey: ['tenants'],
@@ -183,12 +238,6 @@ const LeaseExpirationsCard: React.FC = () => {
     return { progressData, upcomingLeases }
   }, [tenants])
 
-  const getDaysChipStyle = (days: number) => {
-    if (days <= 15) return { backgroundColor: '#ff5252', color: '#ffffff' }
-    if (days <= 30) return { backgroundColor: '#ff9800', color: '#ffffff' }
-    return { backgroundColor: '#757575', color: '#ffffff' }
-  }
-
   return (
     <StyledCard>
       <CardContent sx={{ p: 2, pb: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -271,14 +320,14 @@ const LeaseExpirationsCard: React.FC = () => {
                 width: '4px',
               },
               '&::-webkit-scrollbar-track': {
-                background: 'rgba(0,0,0,0.1)',
+                background: scrollbarTrackColor,
                 borderRadius: '2px',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'rgba(0,0,0,0.3)',
+                background: scrollbarThumbColor,
                 borderRadius: '2px',
                 '&:hover': {
-                  background: 'rgba(0,0,0,0.4)',
+                  background: scrollbarThumbHoverColor,
                 },
               },
             }}

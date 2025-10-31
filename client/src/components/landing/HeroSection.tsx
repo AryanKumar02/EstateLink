@@ -46,7 +46,7 @@ const HeroSection: React.FC = () => {
               variant="h2" // Maintain visual style
               component="div" // Each part is a block within the h1
               fontWeight="bold"
-              color="black"
+              color={theme.palette.mode === 'dark' ? 'text.primary' : 'black'}
               lineHeight={1.2}
               sx={{ fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' } }} // Font size from previous adjustment
             >
@@ -56,7 +56,7 @@ const HeroSection: React.FC = () => {
               variant="h2"
               component="div"
               fontWeight="bold"
-              color="black"
+              color={theme.palette.mode === 'dark' ? 'text.primary' : 'black'}
               lineHeight={1.2}
               sx={{ fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' } }}
             >
@@ -76,7 +76,7 @@ const HeroSection: React.FC = () => {
           <Box sx={{ pl: { xs: 2, sm: 3, md: 4 }, mb: 4 }}>
             <Typography
               component="div"
-              color="grey.700"
+              color={theme.palette.mode === 'dark' ? 'text.secondary' : 'grey.700'}
               lineHeight={1.7}
               sx={{ fontSize: { xs: '1.1rem', md: '1.25rem' } }}
             >
@@ -84,7 +84,7 @@ const HeroSection: React.FC = () => {
             </Typography>
             <Typography
               component="div"
-              color="grey.700"
+              color={theme.palette.mode === 'dark' ? 'text.secondary' : 'grey.700'}
               lineHeight={1.7}
               sx={{ fontSize: { xs: '1.1rem', md: '1.25rem' } }}
             >
@@ -92,7 +92,7 @@ const HeroSection: React.FC = () => {
             </Typography>
             <Typography
               component="div"
-              color="grey.700"
+              color={theme.palette.mode === 'dark' ? 'text.secondary' : 'grey.700'}
               lineHeight={1.7}
               sx={{ fontSize: { xs: '1.1rem', md: '1.25rem' } }}
             >
@@ -161,12 +161,12 @@ const HeroSection: React.FC = () => {
                 py: 1.5,
                 fontSize: '1rem',
                 fontWeight: 600,
-                borderColor: 'grey.400',
-                color: 'grey.800',
+                borderColor: theme.palette.mode === 'dark' ? 'grey.700' : 'grey.400',
+                color: theme.palette.mode === 'dark' ? 'text.primary' : 'grey.800',
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  borderColor: 'grey.500',
+                  borderColor: theme.palette.mode === 'dark' ? 'grey.600' : 'grey.500',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -174,7 +174,7 @@ const HeroSection: React.FC = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
                     pointerEvents: 'none',
                   },
                 },
@@ -186,7 +186,7 @@ const HeroSection: React.FC = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
                     pointerEvents: 'none',
                   },
                 },
@@ -213,7 +213,7 @@ const HeroSection: React.FC = () => {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  color: 'grey.600' /* text-gray-500 */,
+                  color: theme.palette.mode === 'dark' ? 'text.secondary' : 'grey.600' /* text-gray-500 */,
                 }}
               >
                 <CheckIcon sx={{ color: 'success.main', mr: 1, fontSize: '1.25rem' }} />{' '}

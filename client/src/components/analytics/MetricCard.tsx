@@ -17,9 +17,9 @@ interface MetricCardProps {
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#ffffff',
   borderRadius: 16,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  boxShadow: theme.palette.mode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3)' : '0 2px 12px rgba(0, 0, 0, 0.08)',
   transition: 'all 0.3s ease-in-out',
   border: 'none',
   height: 140,
@@ -29,7 +29,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderRadius: 12,
   },
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 4px 20px rgba(0, 0, 0, 0.5)' : '0 4px 20px rgba(0, 0, 0, 0.12)',
     transform: 'translateY(-2px)',
   },
 }))
