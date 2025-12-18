@@ -146,67 +146,31 @@ export const createAppTheme = (mode: PaletteMode) => {
           root: {
             textTransform: 'none',
             borderRadius: 8,
-            fontWeight: 500,
-            padding: '8px 24px',
+            fontWeight: 600,
+            padding: '10px 24px',
+            transition: 'all 0.2s ease-in-out',
           },
           contained: {
-            boxShadow: 'none',
-            position: 'relative',
-            overflow: 'hidden',
+            boxShadow: isDark
+              ? '0 4px 14px 0 rgba(0,0,0,0.4)'
+              : '0 4px 14px 0 rgba(61, 130, 247, 0.2)',
             '&:hover': {
-              boxShadow: '0 2px 8px rgba(33, 150, 243, 0.2)',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                pointerEvents: 'none',
-              },
-            },
-            '&:active': {
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                pointerEvents: 'none',
-              },
+              transform: 'translateY(-1px)',
+              boxShadow: isDark
+                ? '0 6px 20px 0 rgba(0,0,0,0.6)'
+                : '0 6px 20px 0 rgba(61, 130, 247, 0.3)',
             },
           },
           outlined: {
             borderWidth: '1.5px',
-            position: 'relative',
-            overflow: 'hidden',
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.12)',
+            color: isDark ? '#fff' : 'inherit',
             '&:hover': {
               borderWidth: '1.5px',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(33, 150, 243, 0.04)',
-                pointerEvents: 'none',
-              },
-            },
-            '&:active': {
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(33, 150, 243, 0.08)',
-                pointerEvents: 'none',
-              },
+              borderColor: isDark ? '#fff' : 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: isDark
+                ? 'rgba(255, 255, 255, 0.05)'
+                : 'rgba(0, 0, 0, 0.02)',
             },
           },
         },

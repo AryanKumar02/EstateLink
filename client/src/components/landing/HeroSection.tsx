@@ -112,85 +112,15 @@ const HeroSection: React.FC = () => {
             {/* Added pl for alignment */}
             <Button
               variant="contained"
-              color="secondary" // Use secondary blue color
+              color="secondary"
               size="large"
-              sx={{
-                px: 3, // px-8 (MUI large button has decent padding, adjust if needed)
-                py: 1.5, // py-4
-                fontSize: '1rem', // text-lg
-                fontWeight: 600, // font-semibold
-                color: 'common.white',
-                boxShadow: 'lg',
-                position: 'relative',
-                overflow: 'hidden',
-                '&:hover': {
-                  boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    pointerEvents: 'none',
-                  },
-                },
-                '&:active': {
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                    pointerEvents: 'none',
-                  },
-                },
-              }}
             >
               Start Free Trial
             </Button>
             <Button
               variant="outlined"
-              color="inherit" // border-gray-300 text-gray-700
+              color="inherit"
               size="large"
-              sx={{
-                px: 3,
-                py: 1.5,
-                fontSize: '1rem',
-                fontWeight: 600,
-                borderColor: theme.palette.mode === 'dark' ? 'grey.700' : 'grey.400',
-                color: theme.palette.mode === 'dark' ? 'text.primary' : 'grey.800',
-                position: 'relative',
-                overflow: 'hidden',
-                '&:hover': {
-                  borderColor: theme.palette.mode === 'dark' ? 'grey.600' : 'grey.500',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
-                    pointerEvents: 'none',
-                  },
-                },
-                '&:active': {
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-                    pointerEvents: 'none',
-                  },
-                },
-              }}
             >
               Watch Demo
             </Button>
